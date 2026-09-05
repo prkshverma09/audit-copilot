@@ -25,10 +25,18 @@ node_modules/
 out/
 .cache/
 
-# Environment files (keep .env.example, exclude real secrets)
+# Environment files — secrets, never commit these
+.env
+*.env
 .env.local
 .env.*.local
 .env.production
+
+# Explicit per-folder safety nets
+backend/.env
+frontend/.env.local
+frontend/.env.production.local
+
 
 # Storage cache (local PDF staging, not for VCS)
 backend/storage_cache/
