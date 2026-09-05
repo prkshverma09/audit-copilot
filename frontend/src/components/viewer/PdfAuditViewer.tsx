@@ -11,7 +11,6 @@ import {
   ChevronRight,
   Loader2,
   AlertCircle,
-  Search,
 } from 'lucide-react';
 import { Worker, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import {
@@ -286,15 +285,6 @@ export const PdfAuditViewer: React.FC<PdfAuditViewerProps> = ({
               </button>
             )}
           </ZoomInPlugin>
-
-          <button
-            onClick={applyHighlights}
-            title="Re-scan and Highlight Verbatim Quote"
-            className="flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-medium transition-colors ml-2"
-          >
-            <Search className="w-3 h-3 text-amber-400" />
-            <span>Highlight</span>
-          </button>
         </div>
       </div>
 

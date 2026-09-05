@@ -192,17 +192,9 @@ export const HighlightInspector: React.FC<HighlightInspectorProps> = ({
           )}
         </div>
 
-        {/* Global Page / Verification Seal if single input */}
+        {/* Verification Seal */}
         {!isMultiInput && currentActiveInput && (
           <div className="flex items-center space-x-2 text-xs">
-            <button
-              onClick={() => onJumpToPage?.(currentActiveInput.page_number)}
-              className="flex items-center space-x-1 px-2 py-0.5 rounded bg-audit-card border border-audit-border hover:border-sky-400 text-sky-300 font-mono transition-colors"
-            >
-              <span>Page {currentActiveInput.page_number}</span>
-              <span className="text-slate-500 text-[10px]">of {totalPageCount}</span>
-            </button>
-
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase flex items-center gap-1 ${
                 isVerified
@@ -309,12 +301,9 @@ export const HighlightInspector: React.FC<HighlightInspectorProps> = ({
               </div>
 
               {/* Card Footer: Source Document Metadata */}
-              <div className="pt-1 border-t border-slate-800/60 flex items-center justify-between text-[10px] text-slate-400">
-                <span className="truncate max-w-[260px]" title={inp.source_document}>
+              <div className="pt-1 border-t border-slate-800/60 flex items-center text-[10px] text-slate-400">
+                <span className="truncate" title={inp.source_document}>
                   Doc: <span className="text-slate-300">{inp.source_document}</span>
-                </span>
-                <span className="text-slate-500 text-[10px]">
-                  Target Page {inp.page_number}
                 </span>
               </div>
             </div>
