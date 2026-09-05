@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+*.env
+
+# Node.js / Next.js
+node_modules/
+.next/
+out/
+.cache/
+
+# Environment files (keep .env.example, exclude real secrets)
+.env.local
+.env.*.local
+.env.production
+
+# Storage cache (local PDF staging, not for VCS)
+backend/storage_cache/
+
+# Pytest / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+ehthumbs.db

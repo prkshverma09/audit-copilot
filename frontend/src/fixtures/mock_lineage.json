@@ -1,0 +1,246 @@
+{
+  "sheet_id": "sheet_fund_reconciliation_2026_q1",
+  "sheet_name": "Fund Cash & Intercompany Tie-Out",
+  "documents": [
+    {
+      "doc_id": "doc_0894",
+      "filename": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+      "url": "/mock_documents/20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+      "page_count": 2,
+      "category": "bank_statement",
+      "upload_date": "2026-03-31",
+      "file_size": 26872
+    },
+    {
+      "doc_id": "doc_8102",
+      "filename": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+      "url": "/mock_documents/20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+      "page_count": 2,
+      "category": "bank_statement",
+      "upload_date": "2026-03-31",
+      "file_size": 26818
+    }
+  ],
+  "cells": {
+    "C4": {
+      "cell_id": "C4",
+      "metric_name": "Fund I Ending Ledger Balance",
+      "calculated_value": 13217773.59,
+      "formula_display": "Closing Ledger Balance brought forward (Calder EUR 0894)",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "C4",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 1,
+          "extracted_value": 13217773.59,
+          "verbatim_quote": "Closing ledger balance brought forward\n13,217,773.59"
+        }
+      ]
+    },
+    "D5": {
+      "cell_id": "D5",
+      "metric_name": "Fund II Ending Ledger Balance",
+      "calculated_value": 20088.32,
+      "formula_display": "Closing Ledger Balance brought forward (Calder EUR 8102)",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "D5",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 1,
+          "extracted_value": 20088.32,
+          "verbatim_quote": "Closing ledger balance brought forward\n20,088.32"
+        }
+      ]
+    },
+    "C5": {
+      "cell_id": "C5",
+      "metric_name": "Fund II Ending Ledger Balance (Row 5)",
+      "calculated_value": 20088.32,
+      "formula_display": "Closing Ledger Balance brought forward (Calder EUR 8102)",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "D5",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 1,
+          "extracted_value": 20088.32,
+          "verbatim_quote": "Closing ledger balance brought forward\n20,088.32"
+        }
+      ]
+    },
+    "C6": {
+      "cell_id": "C6",
+      "metric_name": "Consolidated Cash Balance",
+      "calculated_value": 13237861.91,
+      "formula_display": "C4 + D5",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "C4",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 1,
+          "extracted_value": 13217773.59,
+          "verbatim_quote": "Current ledger balance\n13,217,773.59"
+        },
+        {
+          "input_cell": "D5",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 1,
+          "extracted_value": 20088.32,
+          "verbatim_quote": "Current ledger balance\n20,088.32"
+        }
+      ]
+    },
+    "C9": {
+      "cell_id": "C9",
+      "metric_name": "Intercompany Inflow: Cephalus Co-Invest",
+      "calculated_value": 1.62,
+      "formula_display": "TRN: 55051QC31ZHZ Credit from NI ABF II",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "C9",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 2,
+          "extracted_value": 1.62,
+          "verbatim_quote": "55051QC31ZHZ\nCEPHALUS TRF\n1.62"
+        }
+      ]
+    },
+    "C10": {
+      "cell_id": "C10",
+      "metric_name": "Intercompany Inflow: Cephalus QFPF",
+      "calculated_value": 1.62,
+      "formula_display": "TRN: 85202DA174BN Credit from NI ABF II",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "C10",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 2,
+          "extracted_value": 1.62,
+          "verbatim_quote": "85202DA174BN\nCEPHALUS TRF\n1.62"
+        }
+      ]
+    },
+    "C11": {
+      "cell_id": "C11",
+      "metric_name": "Total Intercompany Acquisitions",
+      "calculated_value": 3.24,
+      "formula_display": "C9 + C10",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "C9",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 2,
+          "extracted_value": 1.62,
+          "verbatim_quote": "55051QC31ZHZ\nCEPHALUS TRF\n1.62"
+        },
+        {
+          "input_cell": "C10",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 2,
+          "extracted_value": 1.62,
+          "verbatim_quote": "85202DA174BN\nCEPHALUS TRF\n1.62"
+        }
+      ]
+    },
+    "D9": {
+      "cell_id": "D9",
+      "metric_name": "Intercompany Outflow: Cephalus Co-Invest",
+      "calculated_value": -1.62,
+      "formula_display": "TRN: 55051QC31ZHZ Debit to NI ABF I",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "D9",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 2,
+          "extracted_value": -1.62,
+          "verbatim_quote": "55051QC31ZHZ\nCEPHALUS TRF\n-1.62"
+        }
+      ]
+    },
+    "D10": {
+      "cell_id": "D10",
+      "metric_name": "Intercompany Outflow: Cephalus QFPF",
+      "calculated_value": -1.62,
+      "formula_display": "TRN: 85202DA174BN Debit to NI ABF I",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "D10",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 2,
+          "extracted_value": -1.62,
+          "verbatim_quote": "85202DA174BN\nCEPHALUS TRF\n-1.62"
+        }
+      ]
+    },
+    "E11": {
+      "cell_id": "E11",
+      "metric_name": "Intercompany Net Tie-Out Delta",
+      "calculated_value": 0.0,
+      "formula_display": "C11 + D9 + D10 == 0.00 (Balanced)",
+      "status": "verified",
+      "inputs": [
+        {
+          "input_cell": "C11",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 2,
+          "extracted_value": 3.24,
+          "verbatim_quote": "NORDVIK I.A.B. FUND I, TFR+ OBO PMT FRM NI ABF II SCSP"
+        },
+        {
+          "input_cell": "D9",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 2,
+          "extracted_value": -1.62,
+          "verbatim_quote": "NI ABF I SCSP, OBO PMT FRM NI ABF II SCSP"
+        },
+        {
+          "input_cell": "D10",
+          "source_document": "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf",
+          "doc_id": "doc_8102",
+          "page_number": 2,
+          "extracted_value": -1.62,
+          "verbatim_quote": "NI ABF I SCSP, OBO PMT FRM NI ABF II SCSP"
+        }
+      ]
+    },
+    "C14": {
+      "cell_id": "C14",
+      "metric_name": "Unallocated Settlement Reserve (SUSPENSE-Q1)",
+      "calculated_value": 45200.0,
+      "formula_display": "Estimated Q1 Clearing Reserve (SUSPENSE-Q1)",
+      "status": "review_required",
+      "notes": "Audit Discrepancy: €45,200.00 booked in ledger under SUSPENSE-Q1 is unsubstantiated. Statement 20260331_NI_ABF_I_SCSP_CALDER_EUR_0894 has NO corresponding transaction line in the specified date range.",
+      "inputs": [
+        {
+          "input_cell": "C14",
+          "source_document": "20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf",
+          "doc_id": "doc_0894",
+          "page_number": 1,
+          "extracted_value": "Unmatched in PDF (€0.00 found)",
+          "verbatim_quote": "Specified date range\n23 Mar 2026 to 31 Mar 2026\n[Audit Note: Scanned 17 transactions in statement period — zero entries match €45,200.00]"
+        }
+      ]
+    }
+  }
+}

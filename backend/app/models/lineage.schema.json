@@ -1,0 +1,306 @@
+{
+  "$defs": {
+    "BoundingBox": {
+      "properties": {
+        "top": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Top coordinate percentage or pt",
+          "title": "Top"
+        },
+        "left": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Left coordinate percentage or pt",
+          "title": "Left"
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Width percentage or pt",
+          "title": "Width"
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Height percentage or pt",
+          "title": "Height"
+        }
+      },
+      "title": "BoundingBox",
+      "type": "object"
+    },
+    "CellLineage": {
+      "properties": {
+        "cell_id": {
+          "description": "Spreadsheet cell coordinate, e.g. 'C5'",
+          "pattern": "^[A-Z]+[0-9]+$",
+          "title": "Cell Id",
+          "type": "string"
+        },
+        "metric_name": {
+          "description": "Name of financial KPI, e.g. 'Ending Cash Balance'",
+          "title": "Metric Name",
+          "type": "string"
+        },
+        "calculated_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Calculated or reconciled value",
+          "title": "Calculated Value"
+        },
+        "formula_display": {
+          "description": "Human-readable formula, e.g. 'A5 + B5'",
+          "title": "Formula Display",
+          "type": "string"
+        },
+        "status": {
+          "default": "verified",
+          "description": "Audit verification status",
+          "enum": [
+            "verified",
+            "review_required",
+            "unmatched"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "inputs": {
+          "description": "List of source inputs feeding into formula",
+          "items": {
+            "$ref": "#/$defs/LineageInput"
+          },
+          "title": "Inputs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "cell_id",
+        "metric_name",
+        "calculated_value",
+        "formula_display"
+      ],
+      "title": "CellLineage",
+      "type": "object"
+    },
+    "DocumentMetadata": {
+      "properties": {
+        "doc_id": {
+          "description": "Unique document ID",
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "filename": {
+          "description": "File name of the uploaded document",
+          "title": "Filename",
+          "type": "string"
+        },
+        "url": {
+          "description": "Download/streaming URL for the PDF",
+          "title": "Url",
+          "type": "string"
+        },
+        "page_count": {
+          "default": 1,
+          "description": "Total number of pages",
+          "minimum": 1,
+          "title": "Page Count",
+          "type": "integer"
+        },
+        "category": {
+          "default": "other",
+          "description": "Classified document type",
+          "enum": [
+            "bank_statement",
+            "k1",
+            "portfolio_statement",
+            "notice",
+            "other"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "entity_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fund or corporate entity identified",
+          "title": "Entity Name"
+        },
+        "reporting_period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reporting period, e.g. 'Q1 2026' or '2026-03-31'",
+          "title": "Reporting Period"
+        }
+      },
+      "required": [
+        "doc_id",
+        "filename",
+        "url"
+      ],
+      "title": "DocumentMetadata",
+      "type": "object"
+    },
+    "LineageInput": {
+      "properties": {
+        "input_cell": {
+          "description": "Grid coordinate for this input, e.g. 'A5'",
+          "title": "Input Cell",
+          "type": "string"
+        },
+        "source_document": {
+          "description": "Original filename of the source PDF",
+          "title": "Source Document",
+          "type": "string"
+        },
+        "doc_id": {
+          "description": "Unique ID of the document",
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "page_number": {
+          "default": 1,
+          "description": "1-indexed PDF page where quote appears",
+          "minimum": 1,
+          "title": "Page Number",
+          "type": "integer"
+        },
+        "extracted_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Extracted numerical or textual value",
+          "title": "Extracted Value"
+        },
+        "verbatim_quote": {
+          "description": "Exact verbatim text string found in the source PDF",
+          "title": "Verbatim Quote",
+          "type": "string"
+        },
+        "bounding_box": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional bounding box for quote"
+        }
+      },
+      "required": [
+        "input_cell",
+        "source_document",
+        "doc_id",
+        "extracted_value",
+        "verbatim_quote"
+      ],
+      "title": "LineageInput",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "sheet_id": {
+      "description": "Identifier of the generated reconciliation sheet",
+      "title": "Sheet Id",
+      "type": "string"
+    },
+    "sheet_name": {
+      "description": "Display title of the sheet",
+      "title": "Sheet Name",
+      "type": "string"
+    },
+    "documents": {
+      "description": "Underlying source documents",
+      "items": {
+        "$ref": "#/$defs/DocumentMetadata"
+      },
+      "title": "Documents",
+      "type": "array"
+    },
+    "cells": {
+      "additionalProperties": {
+        "$ref": "#/$defs/CellLineage"
+      },
+      "description": "Dictionary of cell_id -> CellLineage",
+      "title": "Cells",
+      "type": "object"
+    },
+    "fortune_sheet_data": {
+      "description": "Array of FortuneSheet workbook sheet objects ready for UI",
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Fortune Sheet Data",
+      "type": "array"
+    }
+  },
+  "required": [
+    "sheet_id",
+    "sheet_name"
+  ],
+  "title": "SheetLineageResponse",
+  "type": "object"
+}
