@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '@fortune-sheet/react/dist/index.css';
-@import '@react-pdf-viewer/core/lib/styles/index.css';
-@import '@react-pdf-viewer/highlight/lib/styles/index.css';
-@import '@react-pdf-viewer/zoom/lib/styles/index.css';
-
 :root {
   --bg-primary: #090d16;
   --bg-secondary: #0f172a;

@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import '@fortune-sheet/react/dist/index.css';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/highlight/lib/styles/index.css';
+import '@react-pdf-viewer/zoom/lib/styles/index.css';
 import './globals.css';
 
 export const metadata: Metadata = {
