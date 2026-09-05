@@ -12,12 +12,18 @@ import { useLineage } from '@/hooks/useLineage';
 import { usePipeline } from '@/hooks/usePipeline';
 import { getMockFortuneData } from '@/services/mockData';
 import { api } from '@/services/api';
+import { TieOutReport } from '@/types/lineage';
+import { TieOutBridgeModal } from '@/components/sheet/TieOutBridgeModal';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function AuditCopilotPage() {
   const [sheetData, setSheetData] = useState<any[]>(getMockFortuneData());
-
   const [jumpRequest, setJumpRequest] = useState<{ page: number; ts: number } | null>(null);
+
+  // Task S.1: Automated Tie-Out & Footing Engine State
+  const [tieOutReport, setTieOutReport] = useState<TieOutReport | null>(null);
+  const [isTieOutModalOpen, setIsTieOutModalOpen] = useState(false);
+  const [isSimulatingDiscrepancy, setIsSimulatingDiscrepancy] = useState(false);
 
   const {
     lineageResponse,
@@ -44,24 +50,45 @@ export default function AuditCopilotPage() {
     coverageStats,
   } = usePipeline(lineageResponse.cells);
 
-  // Sync initial live sheet data from backend if available
+
+  // Sync initial live sheet data and tie-out report from backend if available
   useEffect(() => {
     let isMounted = true;
-    async function loadLiveSheet() {
+    async function loadLiveData() {
       try {
-        const liveSheet = await api.getSheetData('default');
-        if (isMounted && liveSheet && liveSheet.length > 0 && liveSheet[0].celldata?.length) {
-          setSheetData(liveSheet);
+        const [liveSheet, initialTieOut] = await Promise.all([
+          api.getSheetData('default'),
+          api.getTieOutReport('default', false),
+        ]);
+        if (isMounted) {
+          if (liveSheet && liveSheet.length > 0 && liveSheet[0].celldata?.length) {
+            setSheetData(liveSheet);
+          }
+          if (initialTieOut) {
+            setTieOutReport(initialTieOut);
+          }
         }
       } catch (err) {
-        console.warn('Could not load live sheet, kept fallback:', err);
+        console.warn('Could not load live sheet/tieout data, kept fallback:', err);
       }
     }
-    loadLiveSheet();
+    loadLiveData();
     return () => {
       isMounted = false;
     };
   }, []);
+
+  const handleToggleSimulateDiscrepancy = async (simulate: boolean) => {
+    setIsSimulatingDiscrepancy(simulate);
+    try {
+      const updated = await api.getTieOutReport('default', simulate);
+      if (updated) {
+        setTieOutReport(updated);
+      }
+    } catch (err) {
+      console.warn('Could not toggle simulated discrepancy:', err);
+    }
+  };
 
   // Target PDF URL & Page (resolved through API streaming endpoint or fallback)
   const pdfUrl = api.getDocumentUrl(
@@ -80,6 +107,8 @@ export default function AuditCopilotPage() {
         onSelectDocument={selectDocument}
         onOpenUpload={openUpload}
         onRunAudit={() => triggerAuditRun()}
+        onOpenTieOutModal={() => setIsTieOutModalOpen(true)}
+        tieOutReport={tieOutReport}
         isAuditing={isAuditing}
         coverageStats={coverageStats}
       />
@@ -102,6 +131,8 @@ export default function AuditCopilotPage() {
         activeInputIndex={activeInputIndex}
         onSelectInput={selectInput}
         onSelectCell={selectCell}
+        tieOutReport={tieOutReport}
+        onOpenTieOutBridge={() => setIsTieOutModalOpen(true)}
       />
 
       {/* Main Split-Screen Desktop Workspace */}
@@ -118,10 +149,12 @@ export default function AuditCopilotPage() {
                   selectedCellId={selectedCellId}
                   onSelectAuditCell={selectCell}
                   onChange={setSheetData}
+                  tieOutReport={tieOutReport}
                 />
               </div>
             </div>
           }
+
           right={
             <div className="w-full h-full flex flex-col overflow-hidden bg-audit-panel">
               {/* Top: Highlight & Citation Evidence Inspector */}
@@ -200,6 +233,17 @@ export default function AuditCopilotPage() {
           triggerAuditRun();
         }}
       />
+
+      {/* Automated Tie-Out & Footing Bridge Modal */}
+      <TieOutBridgeModal
+        isOpen={isTieOutModalOpen}
+        onClose={() => setIsTieOutModalOpen(false)}
+        report={tieOutReport}
+        onSelectCell={(cellId) => selectCell(cellId)}
+        onToggleSimulateDiscrepancy={handleToggleSimulateDiscrepancy}
+        isSimulatingDiscrepancy={isSimulatingDiscrepancy}
+      />
     </div>
   );
 }
+

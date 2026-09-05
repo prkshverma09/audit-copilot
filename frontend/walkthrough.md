@@ -147,3 +147,61 @@ The modal provides drag-and-drop file ingestion and displays the 3-stage autonom
 - **Production Build:** Next.js static build succeeds with 0 lint and 0 type errors
 - **Architecture Integrity:** Frontend remains purely decoupled from backend and runs autonomously with mock fixtures.
 
+---
+
+## 6. Stretch Goal S.1: Automated Tie-Out & Footing Engine [COMPLETED ✓]
+
+*Completed: 2026-09-05 | Grounded in Call 1: "nobody asks whether this number foots to that number... build a bridge between the two."*
+
+### What Was Built
+
+Task S.1 delivered an end-to-end mathematical footing and tie-out verification system across both backend and frontend:
+
+#### Backend: `tieout_engine.py` + `/api/v1/tieout`
+- **`backend/app/core/tieout_engine.py`**: Evaluates four categories of arithmetic relationships:
+  1. **Vertical Cash Footing** – `Beginning Balance + Net Receipts = Ending Balance`
+  2. **Consolidation Summation** – `C4 (Fund I) + D5 (Fund II) = C6 (Consolidated)`
+  3. **Intercompany Zero-Net Clearing** – `C11 + D9 + D10 = E11 (must equal 0.00)`
+  4. **Suspense Exception Check** – `C14` flagged as unresolved
+- **REST endpoint `GET /api/v1/tieout`**: Returns a `TieOutReport` with:
+  - `bridges`: list of `TieOutBridge` objects (equation, terms, variance, status)
+  - `cell_decorations`: dict mapping cell IDs → `{ type: 'shield' | 'flag', label: string }` for canvas rendering
+  - **Stress-test mode**: `?simulate_discrepancy=true` injects a €500k variance for demo purposes
+
+#### Frontend: Canvas Badges, Bridge Modal & Formula Banner
+- **`SpreadsheetView.tsx`**: Custom `afterRenderCell` hook draws:
+  - Green shield `✓` on footed cells (`C4`, `C6`, `E11`, `D5`)
+  - Amber warning flag `⚠` on exception cells (`C14`)
+- **`TieOutBridgeModal.tsx`**: Full-screen interactive modal with:
+  - Executive scorecard (bridges footed / total, largest variance)
+  - Reconciliation equation cards per bridge
+  - Terms breakdown table (cell, metric, value, role)
+  - Live discrepancy simulation toggle
+- **`FormulaBanner.tsx`**: `[✓ Footed & Tied — Inspect Bridge]` button opens modal directly from the formula ribbon
+
+### Automated Verification Results
+
+| Suite | Target | Assertions | Result |
+| :--- | :--- | :---: | :---: |
+| **Pytest** | `backend/tests/test_tieout_engine.py` | 6 / 6 | **PASSED** |
+| **Headless E2E** | `scripts/test_s1_tieout_e2e.mjs` (Chrome) | 4 / 4 | **PASSED** |
+| **TOTAL** | Combined backend + browser | **10 / 10** | **100% PASSED** |
+
+### Visual Evidence
+
+![Tie-Out Bridge Modal](/Users/prakashverma/.gemini/antigravity-ide/brain/488aee5c-4896-4db1-be86-37748e9472f8/e2e_s1_1_tieout_modal.png)
+
+![Simulated Discrepancy Mode](/Users/prakashverma/.gemini/antigravity-ide/brain/488aee5c-4896-4db1-be86-37748e9472f8/e2e_s1_2_simulated_discrepancy.png)
+
+![E11 Net Zero Tie-Out Cell](/Users/prakashverma/.gemini/antigravity-ide/brain/488aee5c-4896-4db1-be86-37748e9472f8/e2e_s1_4_e11_net_tieout.png)
+
+### Updated Stretch Goal Status
+
+| Stretch Goal | Status |
+| :--- | :---: |
+| **S.1 — Automated Tie-Out & Footing Engine** | **COMPLETED [✓]** |
+| **S.2 — Unmatched Exception Badges** | **COMPLETED [✓]** |
+| **S.3 — 13-Page Audit Memo Export** | PLANNED (post-hackathon) |
+| **S.4 — Lineage Coverage Header Meter** | **COMPLETED [✓]** |
+| **S.5 — Multi-Doc Tabbed PDF Viewer** | **COMPLETED [✓]** |
+

@@ -25,6 +25,7 @@ interface SpreadsheetViewProps {
   selectedCellId: string;
   onSelectAuditCell: (cellId: string) => void;
   onChange?: (data: any[]) => void;
+  tieOutReport?: any;
 }
 
 export function coordsToCellId(r: number, c: number): string {
@@ -43,6 +44,7 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
   selectedCellId,
   onSelectAuditCell,
   onChange,
+  tieOutReport,
 }) => {
   const selectedCellIdRef = useRef(selectedCellId);
   selectedCellIdRef.current = selectedCellId;
@@ -56,6 +58,13 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
 
   const lineageCellMapRef = useRef(lineageCellMap);
   lineageCellMapRef.current = lineageCellMap;
+
+  const tieOutDecorations = useMemo(() => {
+    return tieOutReport?.cell_decorations || {};
+  }, [tieOutReport]);
+
+  const tieOutDecorationsRef = useRef(tieOutDecorations);
+  tieOutDecorationsRef.current = tieOutDecorations;
 
   // Stable hooks object to avoid re-mounting Workbook during Immer context updates
   const hooks = useMemo(() => {
@@ -86,16 +95,72 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
       ) => {
         const cellId = coordsToCellId(cellInfo.row, cellInfo.column);
         const cellLineage = lineageCellMapRef.current[cellId];
-        if (cellLineage) {
+        const cellTieOut = tieOutDecorationsRef.current[cellId];
+
+        if (cellTieOut) {
           ctx.save();
-          // Draw audit indicator dot on top-right of cell
+          if (cellTieOut.status === 'footed_and_tied') {
+            // Draw Green Shield Icon for Footed & Tied Cell
+            const x = cellInfo.endX - 12;
+            const y = cellInfo.startY + 3;
+            ctx.fillStyle = '#10B981';
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 9, y);
+            ctx.lineTo(x + 9, y + 6);
+            ctx.quadraticCurveTo(x + 9, y + 11, x + 4.5, y + 13);
+            ctx.quadraticCurveTo(x, y + 11, x, y + 6);
+            ctx.closePath();
+            ctx.fill();
+
+            // White checkmark inside shield
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 1.3;
+            ctx.beginPath();
+            ctx.moveTo(x + 2.5, y + 6);
+            ctx.lineTo(x + 4.5, y + 9);
+            ctx.lineTo(x + 7.5, y + 3.5);
+            ctx.stroke();
+          } else {
+            // Draw Amber Warning Flag / Triangle for Discrepancy or Review
+            const x = cellInfo.endX - 13;
+            const y = cellInfo.startY + 3;
+            ctx.fillStyle = '#F59E0B';
+            ctx.beginPath();
+            ctx.moveTo(x + 5.5, y);
+            ctx.lineTo(x + 11, y + 11);
+            ctx.lineTo(x, y + 11);
+            ctx.closePath();
+            ctx.fill();
+
+            // Exclamation symbol inside warning triangle
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x + 5, y + 4, 1.2, 3.5);
+            ctx.fillRect(x + 5, y + 8.5, 1.2, 1.2);
+          }
+
+          // Highlight border if selected
+          if (cellId === selectedCellIdRef.current) {
+            ctx.strokeStyle = '#38BDF8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(
+              cellInfo.startX + 1,
+              cellInfo.startY + 1,
+              cellInfo.endX - cellInfo.startX - 2,
+              cellInfo.endY - cellInfo.startY - 2
+            );
+          }
+          ctx.restore();
+        } else if (cellLineage) {
+          ctx.save();
+          // Draw standard audit indicator dot on top-right of cell
           const isVerified = cellLineage.status === 'verified';
           ctx.fillStyle = isVerified ? '#10B981' : '#F59E0B';
           ctx.beginPath();
           ctx.arc(cellInfo.endX - 7, cellInfo.startY + 7, 3.5, 0, 2 * Math.PI);
           ctx.fill();
 
-          // Subtle highlight border if this is the currently active cell
+          // Highlight border if selected
           if (cellId === selectedCellIdRef.current) {
             ctx.strokeStyle = '#38BDF8';
             ctx.lineWidth = 2;

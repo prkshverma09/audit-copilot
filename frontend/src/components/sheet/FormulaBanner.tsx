@@ -9,8 +9,9 @@ import {
   ExternalLink,
   Sigma,
   ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
-import { CellLineage, LineageInput } from '@/types/lineage';
+import { CellLineage, LineageInput, TieOutReport } from '@/types/lineage';
 
 interface FormulaBannerProps {
   selectedCellId: string;
@@ -18,7 +19,10 @@ interface FormulaBannerProps {
   activeInputIndex: number;
   onSelectInput: (input: LineageInput, index: number) => void;
   onSelectCell?: (cellId: string) => void;
+  tieOutReport?: TieOutReport | null;
+  onOpenTieOutBridge?: () => void;
 }
+
 
 const QUICK_AUDIT_CELLS = [
   { id: 'C4', label: 'C4: Fund I Ledger (€13.2M)', status: 'verified' },
@@ -35,7 +39,10 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
   activeInputIndex,
   onSelectInput,
   onSelectCell,
+  tieOutReport,
+  onOpenTieOutBridge,
 }) => {
+
   if (!lineage) {
     return (
       <div className="h-11 border-b border-audit-border bg-audit-panel px-4 flex items-center justify-between shrink-0 select-none">
@@ -121,6 +128,27 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
             })}
           </div>
 
+          {/* Footing & Tie-Out Bridge Button */}
+          {tieOutReport?.cell_decorations?.[selectedCellId] && (
+            <button
+              onClick={onOpenTieOutBridge}
+              className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border transition-all cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] ${
+                tieOutReport.cell_decorations[selectedCellId].status === 'footed_and_tied'
+                  ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40 ring-1 ring-emerald-500/20'
+                  : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40 ring-1 ring-amber-500/20'
+              }`}
+              title="Click to inspect the Arithmetic Bridge equation for this cell"
+            >
+              {tieOutReport.cell_decorations[selectedCellId].status === 'footed_and_tied' ? (
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              ) : (
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+              )}
+              <span>{tieOutReport.cell_decorations[selectedCellId].badge_label}</span>
+              <span className="text-[10px] text-sky-300 underline ml-0.5 font-bold">Inspect Bridge</span>
+            </button>
+          )}
+
           {isVerified ? (
             <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <CheckCircle2 className="w-3 h-3" />
@@ -139,6 +167,7 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
           )}
         </div>
       </div>
+
 
       {/* Bottom Row: Clickable Input Evidence Citation Pills */}
       <div className="flex items-center space-x-2 overflow-x-auto pb-0.5">

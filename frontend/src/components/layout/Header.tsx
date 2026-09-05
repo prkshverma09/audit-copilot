@@ -10,8 +10,9 @@ import {
   AlertTriangle,
   Layers,
   Sparkles,
+  Calculator,
 } from 'lucide-react';
-import { DocumentMeta } from '@/types/lineage';
+import { DocumentMeta, TieOutReport } from '@/types/lineage';
 
 interface HeaderProps {
   documents: DocumentMeta[];
@@ -19,6 +20,8 @@ interface HeaderProps {
   onSelectDocument: (docId: string) => void;
   onOpenUpload: () => void;
   onRunAudit: () => void;
+  onOpenTieOutModal?: () => void;
+  tieOutReport?: TieOutReport | null;
   isAuditing?: boolean;
   coverageStats: {
     totalCells: number;
@@ -35,9 +38,12 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectDocument,
   onOpenUpload,
   onRunAudit,
+  onOpenTieOutModal,
+  tieOutReport,
   isAuditing = false,
   coverageStats,
 }) => {
+
   return (
     <header className="h-14 border-b border-audit-border bg-audit-panel px-4 flex items-center justify-between shrink-0 select-none">
       {/* Brand & Logo */}
@@ -104,7 +110,26 @@ export const Header: React.FC<HeaderProps> = ({
             </>
           )}
         </div>
+
+        {/* Footing & Tie-Out Engine Button */}
+        {onOpenTieOutModal && (
+          <button
+            onClick={onOpenTieOutModal}
+            className={`hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer shadow-sm ${
+              (tieOutReport?.total_unexplained_delta ?? 0) === 0
+                ? 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-300'
+                : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-300'
+            }`}
+            title="Inspect Automated Tie-Out & Footing Bridges"
+          >
+            <Calculator className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span>
+              Tie-Outs: {tieOutReport?.passed_bridges ?? 3}/{tieOutReport?.total_bridges ?? 4} Tied
+            </span>
+          </button>
+        )}
       </div>
+
 
       {/* Right: Actions */}
       <div className="flex items-center space-x-2.5">

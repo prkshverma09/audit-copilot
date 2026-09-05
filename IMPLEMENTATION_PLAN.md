@@ -515,15 +515,19 @@ flowchart TD
 > **Core Scope Completed:** Phase 0 through Phase 3 (Tasks 0.1 through 5.2) are 100% complete, integrated, and verified end-to-end. Four key stretch goals have been implemented and validated directly within the product.
 
 #### Task S.1 (Priority 1 — Highest Impact): Automated "Tie-Out & Footing" Engine [COMPLETED ✓]
-* **Folder:** `frontend/src/components/sheet/`, `backend/app/graph/nodes/`
+* **Folder:** `frontend/src/components/sheet/`, `backend/app/core/`, `backend/app/api/v1/`
 * **Lead / Track:** Full-Stack Lead
 * **Status:** **COMPLETED [✓]**
 * **Delivered:** Grounded directly in Call 1 (*"nobody asks whether this number foots to that number... build a bridge between the two"*):
-  1. Implemented mathematical footing and consolidation logic: vertical footing (`C4 + D5 = C6`), intercompany net balances (`E11 = C11 + D9 + D10 == 0.00`), and cross-statement bank ties.
-  2. Integrated Formula & Footing Banner displaying clear verification status, arithmetic bridge breakdowns, and verified shield badges.
+  1. **Backend Math Engine (`backend/app/core/tieout_engine.py` & `/api/v1/tieout`)**: Evaluates vertical cash footing (`Beginning + Receipts = Ending`), consolidation summation (`C4 + D5 = C6`), intercompany zero net clearing (`C11 + D9 + D10 = E11`), and suspense exception checks (`C14`). Features real-time variance stress testing via `simulate_discrepancy=true`.
+  2. **FortuneSheet Canvas Shields & Flags (`SpreadsheetView.tsx`)**: Renders custom green shield badges (`✓`) on footed cells (`C4`, `C6`, `E11`) and amber warning flags (`⚠️`) on discrepancy cells (`C14`).
+  3. **Interactive Arithmetic Bridge Inspector (`TieOutBridgeModal.tsx`)**: Comprehensive modal with executive scorecard, reconciliation equations, terms table, and live variance simulation.
+  4. **Formula Banner Integration (`FormulaBanner.tsx`)**: Interactive `[✓ Footed & Tied Inspect Bridge]` button for instant one-click inspection.
+  5. **Automated Verification**: Pytest suite (`tests/test_tieout_engine.py`) and headless Chrome E2E test (`scripts/test_s1_tieout_e2e.mjs`) passing 100%.
 * **Prerequisites:** Task 5.2 (All Core Features Complete & Verified).
 * **Blocks:** Task S.2.
-* **Deliverables:** Automated footing validator and interactive UI discrepancy inspector.
+* **Deliverables:** Automated footing validator, REST endpoints, canvas decoration engine, and interactive modal inspector.
+
 
 #### Task S.2 (Priority 2): Deliberate Imperfection & Exception Badges (Unmatched Resolver) [COMPLETED ✓]
 * **Folder:** `frontend/src/components/sheet/`, `shared/schemas/`
