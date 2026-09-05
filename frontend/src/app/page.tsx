@@ -207,10 +207,10 @@ export default function AuditCopilotPage() {
                           </div>
                           <div>
                             <div className="font-bold text-white group-hover:text-amber-300 transition-colors">
-                              Load Demo Audit (Flow 2)
+                              Load Demo Audit
                             </div>
                             <div className="text-[11px] text-slate-400">
-                              Calder Fund Q1 • 18 Traced Cells • Tie-Out Bridges
+                              Calder Fund Q1 Reconciliation & Verified Lineage
                             </div>
                           </div>
                         </div>
@@ -227,10 +227,10 @@ export default function AuditCopilotPage() {
                           </div>
                           <div>
                             <div className="font-bold text-white group-hover:text-sky-300 transition-colors">
-                              Upload Statements & Run Audit (Flow 1)
+                              Upload Statements & Run Audit
                             </div>
                             <div className="text-[11px] text-slate-400">
-                              Ingest PDF statements with LangGraph & Gemini DAG
+                              Extract lineage & verify tie-outs from PDF statements
                             </div>
                           </div>
                         </div>

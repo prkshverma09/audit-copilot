@@ -81,9 +81,6 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
                 <h2 className="text-base font-bold text-white tracking-tight">
                   Automated Tie-Out & Footing Engine
                 </h2>
-                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-300 border border-sky-500/20">
-                  Task S.1 Verified
-                </span>
               </div>
               <p className="text-xs text-slate-400">
                 Grounded mathematical verification, vertical footing, and cross-statement bridges
@@ -378,7 +375,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
 
             {/* Modal Footer actions */}
             <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <span>Verified against Ylookup Hackathon Official Statement Fixtures</span>
+              <span>Zero-Variance Tie-Out Standard</span>
               <button
                 onClick={onClose}
                 className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors"

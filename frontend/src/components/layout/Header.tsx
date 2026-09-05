@@ -2,13 +2,9 @@
 
 import React from 'react';
 import {
-  FileSpreadsheet,
-  FileText,
   Upload,
-  Play,
   CheckCircle2,
   AlertTriangle,
-  Layers,
   Sparkles,
   Calculator,
 } from 'lucide-react';
@@ -60,47 +56,18 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
               X-Ray <span className="text-sky-400 font-extrabold">Audit Copilot</span>
             </span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">
-              Ylookup AI
-            </span>
           </div>
-          <p className="text-[11px] text-audit-muted font-normal leading-none">
+          <p className="text-[11px] text-audit-muted font-normal leading-none mt-0.5">
             Cell-to-PDF Lineage & Footing Verification Engine
           </p>
         </div>
       </div>
 
-      {/* Center: Statement Selector & Audit Confidence Meter */}
-      <div className="flex items-center space-x-4">
-        {/* Document Selector */}
-        <div className="flex items-center space-x-2 bg-audit-bg/80 border border-audit-border px-2.5 py-1 rounded-lg">
-          <FileText className="w-4 h-4 text-sky-400 shrink-0" />
-          <span className="text-xs text-audit-muted font-medium">Statement:</span>
-          <select
-            id="statement-selector"
-            name="statement-selector"
-            value={activeDocumentId}
-            onChange={(e) => onSelectDocument(e.target.value)}
-            disabled={documents.length === 0}
-            className="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer max-w-[240px] truncate disabled:opacity-50"
-          >
-            {documents.length === 0 ? (
-              <option value="" className="bg-slate-900 text-slate-400">
-                (No statements loaded)
-              </option>
-            ) : (
-              documents.map((doc) => (
-                <option key={doc.doc_id} value={doc.doc_id} className="bg-slate-900 text-slate-200">
-                  {doc.filename}
-                </option>
-              ))
-            )}
-          </select>
-        </div>
-
+      {/* Center: Audit Confidence Meter & Tie-Out Engine */}
+      <div className="flex items-center space-x-3">
         {/* Audit Confidence Pill */}
         {coverageStats.totalCells > 0 ? (
-          <div className="hidden lg:flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg text-xs">
+          <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg text-xs">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span className="text-emerald-300 font-semibold">Lineage Coverage:</span>
             <span className="text-emerald-400 font-bold font-mono">
@@ -121,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
         ) : (
-          <div className="hidden lg:flex items-center space-x-2 bg-slate-800/40 border border-audit-border px-3 py-1 rounded-lg text-xs text-slate-400">
+          <div className="flex items-center space-x-2 bg-slate-800/40 border border-audit-border px-3 py-1 rounded-lg text-xs text-slate-400">
             <Sparkles className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             <span>Ready for Audit Ingestion</span>
           </div>
@@ -131,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
         {onOpenTieOutModal && tieOutReport && (
           <button
             onClick={onOpenTieOutModal}
-            className={`hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer shadow-sm ${
+            className={`flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer shadow-sm ${
               (tieOutReport?.total_unexplained_delta ?? 0) === 0
                 ? 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-300'
                 : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-300'
@@ -146,14 +113,13 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </div>
 
-
       {/* Right: Actions */}
       <div className="flex items-center space-x-2.5">
         {onLoadDemoAudit && (
           <button
             onClick={onLoadDemoAudit}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-semibold text-amber-300 hover:text-amber-200 transition-all duration-150 cursor-pointer shadow-sm"
-            title="Reload official baseline Fund Reconciliation (Flow 2 Demo)"
+            title="Reload baseline Fund Reconciliation (Demo)"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span>Load Demo Audit</span>
@@ -162,19 +128,11 @@ export const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onOpenUpload}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-audit-border bg-audit-bg hover:bg-audit-card text-xs font-medium text-slate-300 hover:text-white transition-all duration-150"
-        >
-          <Upload className="w-3.5 h-3.5 text-slate-400" />
-          <span>Upload PDFs</span>
-        </button>
-
-        <button
-          onClick={onRunAudit}
           disabled={isAuditing}
-          className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-md transition-all duration-150 ${
+          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold shadow-sm transition-all duration-150 cursor-pointer ${
             isAuditing
-              ? 'bg-blue-600/50 text-blue-200 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white shadow-blue-500/20 active:scale-95'
+              ? 'bg-blue-600/50 border-blue-500/40 text-blue-200 cursor-not-allowed'
+              : 'border-sky-500/30 bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 hover:text-white'
           }`}
         >
           {isAuditing ? (
@@ -184,8 +142,8 @@ export const Header: React.FC<HeaderProps> = ({
             </>
           ) : (
             <>
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>Run Audit</span>
+              <Upload className="w-3.5 h-3.5 text-sky-400" />
+              <span>Upload PDFs</span>
             </>
           )}
         </button>

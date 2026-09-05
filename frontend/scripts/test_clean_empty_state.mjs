@@ -37,17 +37,15 @@ async function clickButtonWithText(page, text) {
   await sleep(1000);
 
   let content = await page.content();
-  const hasIntakeCard = content.includes('Load Demo Audit (Flow 2)');
-  const hasNoStatement = content.includes('(No statements loaded)');
+  const hasIntakeCard = content.includes('Load Demo Audit');
   const hasReadyPill = content.includes('Ready for Audit Ingestion');
   const hasNoPreloadedTable = !content.includes('13,217,773.59');
 
   console.log('Intake card displayed:', hasIntakeCard);
-  console.log('(No statements loaded) displayed:', hasNoStatement);
   console.log('"Ready for Audit Ingestion" pill displayed:', hasReadyPill);
   console.log('No mock financial figures pre-loaded:', hasNoPreloadedTable);
 
-  if (!hasIntakeCard || !hasNoStatement || !hasReadyPill || !hasNoPreloadedTable) {
+  if (!hasIntakeCard || !hasReadyPill || !hasNoPreloadedTable) {
     console.error('❌ FAILED: Initial page is not clean/empty!');
     process.exit(1);
   }
@@ -84,17 +82,15 @@ async function clickButtonWithText(page, text) {
   await sleep(1000);
 
   content = await page.content();
-  const reloadedIntakeCard = content.includes('Load Demo Audit (Flow 2)');
-  const reloadedNoStatement = content.includes('(No statements loaded)');
+  const reloadedIntakeCard = content.includes('Load Demo Audit');
   const reloadedReadyPill = content.includes('Ready for Audit Ingestion');
   const reloadedNoFigures = !content.includes('13,217,773.59');
 
   console.log('After reload: Intake card displayed:', reloadedIntakeCard);
-  console.log('After reload: (No statements loaded) displayed:', reloadedNoStatement);
   console.log('After reload: Ready pill displayed:', reloadedReadyPill);
   console.log('After reload: No mock figures present:', reloadedNoFigures);
 
-  if (!reloadedIntakeCard || !reloadedNoStatement || !reloadedReadyPill || !reloadedNoFigures) {
+  if (!reloadedIntakeCard || !reloadedReadyPill || !reloadedNoFigures) {
     console.error('❌ FAILED: Reload did not reset to clean empty state!');
     process.exit(1);
   }

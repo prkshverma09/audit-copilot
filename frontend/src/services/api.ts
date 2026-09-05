@@ -263,7 +263,7 @@ export const api = {
             inputs: [
               { cell_id: 'C14', label: 'Unmatched Narrative Receipt Tranche', amount: 45200.0, source_doc: '20260331_NI_ABF_I_SCSP_EUR_5103.pdf', page_number: 1, verbatim_quote: '45,200.00' }
             ],
-            notes: 'Grounded in hackathon dataset (52% unmatched counterparties): Counterparty narrative truncated on PDF statement. Quarantined in Suspense until KYC/trade confirmation match.'
+            notes: 'Counterparty narrative truncated on PDF statement. Quarantined in Suspense until KYC/trade confirmation match.'
           }
         ],
         cell_decorations: {

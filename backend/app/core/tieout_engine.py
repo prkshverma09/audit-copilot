@@ -253,7 +253,7 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
                 verbatim_quote="45,200.00",
             )
         ],
-        notes="Grounded in hackathon dataset (52% unmatched counterparties): Counterparty narrative truncated on PDF statement. Quarantined in Suspense until KYC/trade confirmation match.",
+        notes="Counterparty narrative truncated on PDF statement. Quarantined in Suspense until KYC/trade confirmation match.",
     )
 
     bridges = [bridge_1, bridge_2, bridge_3, bridge_4]
