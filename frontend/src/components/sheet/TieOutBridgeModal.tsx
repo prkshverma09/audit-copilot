@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   ShieldCheck,
@@ -33,8 +34,23 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
   isSimulatingDiscrepancy,
 }) => {
   const [selectedBridgeId, setSelectedBridgeId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen || !report) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !report || !mounted) return null;
 
   const activeBridge =
     report.bridges.find((b) => b.bridge_id === selectedBridgeId) || report.bridges[0];
@@ -46,8 +62,13 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
     })}`;
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+    >
       <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden text-slate-100">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/80">
@@ -368,6 +389,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

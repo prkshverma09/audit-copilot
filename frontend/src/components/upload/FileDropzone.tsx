@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Upload,
   FileText,
@@ -32,8 +33,23 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
   const [pipelineStep, setPipelineStep] = useState<PipelineStep>('idle');
   const [progressPercent, setProgressPercent] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !mounted) return null;
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
@@ -110,8 +126,13 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
     pipelineStep === 'extracting' ||
     pipelineStep === 'generating';
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (!isRunning && e.target === e.currentTarget) resetModal();
+      }}
+      className="fixed inset-0 z-[99999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-150"
+    >
       <div className="w-full max-w-xl bg-audit-panel border border-audit-border rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
         <div className="h-14 border-b border-audit-border px-5 flex items-center justify-between">
@@ -351,6 +372,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

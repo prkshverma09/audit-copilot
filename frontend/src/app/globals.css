@@ -55,6 +55,38 @@ body {
   color: #000 !important;
 }
 
+/* FortuneSheet scrollbar z-index and dark styling fix */
+.luckysheet-scrollbar-ltr {
+  z-index: 10 !important;
+}
+
+.luckysheet-scrollbar-ltr::-webkit-scrollbar,
+.luckysheet-scrollbar-x::-webkit-scrollbar,
+.luckysheet-scrollbar-y::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #0f172a !important;
+}
+
+.luckysheet-scrollbar-ltr::-webkit-scrollbar-track,
+.luckysheet-scrollbar-x::-webkit-scrollbar-track,
+.luckysheet-scrollbar-y::-webkit-scrollbar-track {
+  background-color: #0f172a !important;
+}
+
+.luckysheet-scrollbar-ltr::-webkit-scrollbar-thumb,
+.luckysheet-scrollbar-x::-webkit-scrollbar-thumb,
+.luckysheet-scrollbar-y::-webkit-scrollbar-thumb {
+  background-color: #334155 !important;
+  border-radius: 4px !important;
+}
+
+.luckysheet-scrollbar-ltr::-webkit-scrollbar-thumb:hover,
+.luckysheet-scrollbar-x::-webkit-scrollbar-thumb:hover,
+.luckysheet-scrollbar-y::-webkit-scrollbar-thumb:hover {
+  background-color: #475569 !important;
+}
+
 /* Bright yellow pulse for active lineage highlight in PDF */
 .audit-highlight-match {
   background-color: rgba(250, 204, 21, 0.45) !important;
