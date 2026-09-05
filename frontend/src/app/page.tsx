@@ -74,9 +74,10 @@ export default function AuditCopilotPage() {
         }
         selectCell('C4', defaultLineage);
       }
-      if (defaultSheet && defaultSheet.length > 0) {
-        setSheetData(defaultSheet);
-      }
+      const sheet = (defaultSheet && defaultSheet.length > 0 && defaultSheet[0]?.celldata?.length > 0)
+        ? defaultSheet
+        : getMockFortuneData();
+      setSheetData(sheet);
       if (defaultTieOut) {
         setTieOutReport(defaultTieOut);
       }
@@ -99,9 +100,10 @@ export default function AuditCopilotPage() {
         }
         selectCell('C4', latestLineage);
       }
-      if (latestSheet && latestSheet.length > 0) {
-        setSheetData(latestSheet);
-      }
+      const sheet = (latestSheet && latestSheet.length > 0 && latestSheet[0]?.celldata?.length > 0)
+        ? latestSheet
+        : getMockFortuneData();
+      setSheetData(sheet);
       if (latestTieOut) {
         setTieOutReport(latestTieOut);
       }

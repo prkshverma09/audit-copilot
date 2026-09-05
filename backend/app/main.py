@@ -54,11 +54,19 @@ async def lifespan(app: FastAPI):
         os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "src", "fixtures", "mock_lineage.json")),
         os.path.abspath("frontend/src/fixtures/mock_lineage.json"),
     ]
+    fortune_paths = [
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "src", "fixtures", "mock_fortune_data.json")),
+        os.path.abspath("frontend/src/fixtures/mock_fortune_data.json"),
+    ]
     fixture_file = next((p for p in fixture_paths if os.path.exists(p)), None)
+    fortune_file = next((p for p in fortune_paths if os.path.exists(p)), None)
     if fixture_file:
         try:
             with open(fixture_file, "r") as f:
                 fixture_data = json.load(f)
+            if fortune_file:
+                with open(fortune_file, "r") as f_f:
+                    fixture_data["fortune_sheet_data"] = json.load(f_f)
             jobs_registry["default"] = JobStatus(
                 job_id="default",
                 status="completed",
@@ -66,7 +74,7 @@ async def lifespan(app: FastAPI):
                 message="Initial Fund Cash & Tie-Out Reconciliation ready.",
                 result=SheetLineageResponse(**fixture_data)
             )
-            logger.info("Default reconciliation matrix loaded instantly from verified baseline.")
+            logger.info("Default reconciliation matrix & sheet data loaded instantly from verified baseline.")
         except Exception as err:
             logger.warning(f"Could not load baseline fixture: {err}")
 
@@ -76,8 +84,8 @@ async def lifespan(app: FastAPI):
         async def _background_reconcile():
             try:
                 res = await run_audit_pipeline(staged_ids, sheet_id="sheet_fund_reconciliation_2026_q1")
-                jobs_registry["default"] = JobStatus(
-                    job_id="default",
+                jobs_registry["auto_startup"] = JobStatus(
+                    job_id="auto_startup",
                     status="completed",
                     progress=1.0,
                     message="Fund Cash & Tie-Out Reconciliation ready.",

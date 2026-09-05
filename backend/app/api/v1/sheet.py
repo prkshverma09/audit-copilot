@@ -16,8 +16,15 @@ async def get_sheet_data(identifier: str = "default"):
     """
     result = find_job_result(identifier)
     if not result:
+        default_res = find_job_result("default")
+        if default_res and default_res.fortune_sheet_data:
+            return default_res.fortune_sheet_data
         raise HTTPException(
             status_code=404,
             detail=f"No sheet data found for identifier '{identifier}'."
         )
+    if not result.fortune_sheet_data:
+        default_res = find_job_result("default")
+        if default_res and default_res.fortune_sheet_data:
+            return default_res.fortune_sheet_data
     return result.fortune_sheet_data

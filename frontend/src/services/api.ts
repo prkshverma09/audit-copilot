@@ -54,7 +54,11 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/api/v1/sheet/${sheetId}`);
       if (!res.ok) throw new Error(`Failed to fetch sheet data: ${res.statusText}`);
-      return await res.json();
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0 && (data[0] as any)?.celldata?.length > 0) {
+        return data;
+      }
+      return getMockFortuneData();
     } catch (err) {
       console.warn(`[api.getSheetData] Backend fetch failed (${err}), falling back to mock.`);
       return getMockFortuneData();

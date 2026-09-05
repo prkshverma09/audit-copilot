@@ -24,6 +24,8 @@ class StorageAdapter:
         # Create deterministic hash-based prefix with clean short slug
         file_hash = hashlib.sha256(content).hexdigest()[:8]
         safe_name = "".join(c for c in filename if c.isalnum() or c in "._-")
+        if safe_name.lower().endswith(".pdf"):
+            safe_name = safe_name[:-4]
         return f"doc_{file_hash}_{safe_name}"
 
     def save_file(self, filename: str, content: bytes) -> DocumentMetadata:
@@ -57,13 +59,21 @@ class StorageAdapter:
 
     def get_file_path(self, doc_id: str) -> Optional[Path]:
         # Check standard path
-        file_path = self.base_path / f"{doc_id}.pdf"
-        if file_path.exists():
-            return file_path
-        # Check without .pdf extension
-        alt_path = self.base_path / doc_id
-        if alt_path.exists():
-            return alt_path
+        candidates = [
+            self.base_path / f"{doc_id}.pdf",
+            self.base_path / doc_id,
+            self.base_path / f"{doc_id}.pdf.pdf",
+        ]
+        for p in candidates:
+            if p.exists():
+                return p
+
+        # Fuzzy / identifier match (e.g. "doc_0894" matches "*0894*")
+        search_key = doc_id.replace("doc_", "").split(".")[0]
+        if search_key:
+            for p in self.base_path.glob(f"*{search_key}*"):
+                if p.is_file():
+                    return p
         return None
 
     def get_file_bytes(self, doc_id: str) -> Optional[bytes]:
