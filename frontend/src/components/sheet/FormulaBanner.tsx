@@ -24,14 +24,15 @@ interface FormulaBannerProps {
 }
 
 
-const QUICK_AUDIT_CELLS = [
-  { id: 'C4', label: 'C4: Fund I Ledger (€13.2M)', status: 'verified' },
-  { id: 'D5', label: 'D5: Fund II Ledger (€20.0K)', status: 'verified' },
-  { id: 'C6', label: 'C6: Consolidated (€13.2M)', status: 'verified' },
-  { id: 'C9', label: 'C9: Cephalus Inflow (€1.62)', status: 'verified' },
-  { id: 'E11', label: 'E11: Tie-Out Δ €0.00', status: 'verified' },
-  { id: 'C14', label: 'C14: Suspense Reserve', status: 'review' },
-];
+function isActualFormula(formula?: string): boolean {
+  if (!formula) return false;
+  const trimmed = formula.trim();
+  if (trimmed.startsWith('=')) return true;
+  if (/[A-Z]+[0-9]+\s*[\+\-\*\/]/.test(trimmed) || /\b(SUM|AVERAGE|COUNT|IF)\b/i.test(trimmed)) {
+    return true;
+  }
+  return false;
+}
 
 export const FormulaBanner: React.FC<FormulaBannerProps> = ({
   selectedCellId,
@@ -53,25 +54,6 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
             {selectedCellId ? `Selected: ${selectedCellId}` : 'Load an audit to inspect formula lineage'}
           </span>
         </div>
-
-        {selectedCellId && onSelectCell && (
-          <div className="flex items-center space-x-1">
-            <span className="text-[10px] uppercase font-bold text-slate-500 mr-1">Audited Cells:</span>
-            {QUICK_AUDIT_CELLS.map((cell) => (
-              <button
-                key={cell.id}
-                onClick={() => onSelectCell?.(cell.id)}
-                className={`px-2 py-0.5 rounded text-[11px] font-mono transition-colors ${
-                  cell.status === 'review'
-                    ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                    : 'bg-audit-card hover:bg-sky-500/20 text-sky-300 hover:text-white border border-audit-border'
-                }`}
-              >
-                {cell.id}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
     );
   }
@@ -79,6 +61,7 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
   const isVerified = lineage.status === 'verified';
   const isReview = lineage.status === 'review_required';
   const hasTieOutDecoration = Boolean(tieOutReport?.cell_decorations?.[selectedCellId]);
+  const hasFormula = isActualFormula(lineage.formula_display);
 
   return (
     <div className="h-10 border-b border-audit-border bg-audit-panel/95 backdrop-blur px-3 shrink-0 select-none flex items-center justify-between gap-2 shadow-sm">
@@ -90,43 +73,25 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
         </div>
 
         {/* Metric Name */}
-        <span className="text-xs font-semibold text-white truncate max-w-[220px]">
+        <span className="text-xs font-semibold text-white truncate max-w-[260px]">
           {lineage.metric_name}
         </span>
 
-        <span className="text-slate-600">|</span>
-
-        {/* Formula Equation Display */}
-        <div className="flex items-center space-x-1.5 text-xs text-slate-300 font-mono bg-audit-card px-2.5 py-0.5 rounded border border-audit-border/60">
-          <Sigma className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-          <span className="text-slate-400 text-[11px]">Formula:</span>
-          <span className="text-sky-300 font-semibold">{lineage.formula_display}</span>
-        </div>
+        {/* Formula Equation Display - Only shown if an actual formula exists */}
+        {hasFormula && (
+          <>
+            <span className="text-slate-600">|</span>
+            <div className="flex items-center space-x-1.5 text-xs text-slate-300 font-mono bg-audit-card px-2.5 py-0.5 rounded border border-audit-border/60">
+              <Sigma className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+              <span className="text-slate-400 text-[11px]">Formula:</span>
+              <span className="text-sky-300 font-semibold">{lineage.formula_display}</span>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Right: Quick Jump & Bridge Status */}
+      {/* Right: Bridge Status */}
       <div className="flex items-center space-x-2 shrink-0">
-        <div className="hidden xl:flex items-center space-x-1 border-r border-slate-700/80 pr-2">
-          <span className="text-[10px] uppercase font-bold text-slate-500">Jump:</span>
-          {QUICK_AUDIT_CELLS.map((cell) => {
-            const isSelected = cell.id === selectedCellId;
-            return (
-              <button
-                key={cell.id}
-                onClick={() => onSelectCell?.(cell.id)}
-                className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
-                  isSelected
-                    ? 'bg-sky-500/30 text-sky-200 border border-sky-400 font-bold'
-                    : cell.status === 'review'
-                    ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/20'
-                    : 'bg-audit-card hover:bg-slate-700 text-slate-300 border border-audit-border/60'
-                }`}
-              >
-                {cell.id}
-              </button>
-            );
-          })}
-        </div>
 
         {/* Footing & Tie-Out Bridge Button */}
         {hasTieOutDecoration ? (

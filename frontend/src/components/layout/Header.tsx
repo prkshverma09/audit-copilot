@@ -52,14 +52,9 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
-              X-Ray <span className="text-sky-400 font-extrabold">Audit Copilot</span>
-            </span>
-          </div>
-          <p className="text-[11px] text-audit-muted font-normal leading-none mt-0.5">
-            Cell-to-PDF Lineage & Footing Verification Engine
-          </p>
+          <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
+            X-Ray <span className="text-sky-400 font-extrabold">Audit Copilot</span>
+          </span>
         </div>
       </div>
 

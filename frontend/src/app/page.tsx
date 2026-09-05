@@ -131,6 +131,15 @@ export default function AuditCopilotPage() {
   const targetPage = activeInput?.page_number || 1;
   const verbatimQuote = activeInput?.verbatim_quote || '';
 
+  // Expose cell selector for programmatic/test interaction without requiring UI jump buttons
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).selectAuditCell = (cellId: string) => {
+        selectCell(cellId);
+      };
+    }
+  }, [selectCell]);
+
   const hasAuditLoaded = Object.keys(lineageResponse.cells || {}).length > 0;
 
   return (

@@ -114,19 +114,16 @@ async function run() {
   // ============================================================
   console.log('\n🚨 STEP 3: S.2 — C14 Exception Badge\n');
   
-  // Click C14 quick-jump
-  let clickedC14 = false;
-  const allBtns = await page.$$('button');
-  for (const btn of allBtns) {
-    const txt = await btn.evaluate(el => el.textContent.trim()).catch(() => '');
-    if (txt === 'C14') {
-      await btn.click();
-      await sleep(1500);
-      clickedC14 = true;
-      break;
+  // Select C14 cell
+  const selectedC14 = await page.evaluate(() => {
+    if (typeof window.selectAuditCell === 'function') {
+      window.selectAuditCell('C14');
+      return true;
     }
-  }
-  assert('S.2: C14 quick-jump button exists', clickedC14, clickedC14 ? 'Clicked' : 'Not found');
+    return false;
+  });
+  await sleep(1500);
+  assert('S.2: C14 cell selected', selectedC14, selectedC14 ? 'Selected' : 'Not found');
   
   const pageAfterC14 = await page.content();
   assert('S.2: Review Required text shown for C14', 
@@ -145,18 +142,16 @@ async function run() {
   // ============================================================
   console.log('\n📄 STEP 4: S.5 — Multi-Doc Citation Switcher (C6)\n');
   
-  let clickedC6 = false;
-  const allBtns2 = await page.$$('button');
-  for (const btn of allBtns2) {
-    const txt = await btn.evaluate(el => el.textContent.trim()).catch(() => '');
-    if (txt === 'C6') {
-      await btn.click();
-      await sleep(1500);
-      clickedC6 = true;
-      break;
+  // Select C6 cell
+  const selectedC6 = await page.evaluate(() => {
+    if (typeof window.selectAuditCell === 'function') {
+      window.selectAuditCell('C6');
+      return true;
     }
-  }
-  assert('S.5: C6 quick-jump button exists', clickedC6, clickedC6 ? 'Clicked' : 'Not found');
+    return false;
+  });
+  await sleep(1500);
+  assert('S.5: C6 cell selected', selectedC6, selectedC6 ? 'Selected' : 'Not found');
   
   const pageAfterC6 = await page.content();
   assert('S.5: Formula equation shown (Sum:)', 
