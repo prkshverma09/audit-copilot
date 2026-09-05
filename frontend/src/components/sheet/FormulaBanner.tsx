@@ -45,33 +45,33 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
 
   if (!lineage) {
     return (
-      <div className="h-11 border-b border-audit-border bg-audit-panel px-4 flex items-center justify-between shrink-0 select-none">
-        <div className="flex items-center space-x-3 text-xs text-audit-muted">
-          <div className="px-2 py-0.5 rounded bg-audit-card border border-audit-border font-mono font-bold text-sky-400">
-            {selectedCellId || 'None'}
-          </div>
-          <span className="italic">
-            Select any cell with an audit dot or click a quick jump button:
+      <div className="h-10 border-b border-audit-border bg-audit-panel px-4 flex items-center justify-between shrink-0 select-none text-xs text-audit-muted">
+        <div className="flex items-center space-x-2">
+          <span className="font-mono text-slate-400">Formula & Lineage Bar</span>
+          <span className="text-slate-600">|</span>
+          <span className="italic text-slate-400">
+            {selectedCellId ? `Selected: ${selectedCellId}` : 'Load an audit to inspect formula lineage'}
           </span>
         </div>
 
-        {/* Quick Jump Bar */}
-        <div className="flex items-center space-x-1">
-          <span className="text-[10px] uppercase font-bold text-slate-500 mr-1">Audited Cells:</span>
-          {QUICK_AUDIT_CELLS.map((cell) => (
-            <button
-              key={cell.id}
-              onClick={() => onSelectCell?.(cell.id)}
-              className={`px-2 py-0.5 rounded text-[11px] font-mono transition-colors ${
-                cell.status === 'review'
-                  ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                  : 'bg-audit-card hover:bg-sky-500/20 text-sky-300 hover:text-white border border-audit-border'
-              }`}
-            >
-              {cell.id}
-            </button>
-          ))}
-        </div>
+        {selectedCellId && onSelectCell && (
+          <div className="flex items-center space-x-1">
+            <span className="text-[10px] uppercase font-bold text-slate-500 mr-1">Audited Cells:</span>
+            {QUICK_AUDIT_CELLS.map((cell) => (
+              <button
+                key={cell.id}
+                onClick={() => onSelectCell?.(cell.id)}
+                className={`px-2 py-0.5 rounded text-[11px] font-mono transition-colors ${
+                  cell.status === 'review'
+                    ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-audit-card hover:bg-sky-500/20 text-sky-300 hover:text-white border border-audit-border'
+                }`}
+              >
+                {cell.id}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     );
   }

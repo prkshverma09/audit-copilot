@@ -10,39 +10,21 @@ import {
 import { getMockLineageResponse } from '@/services/mockData';
 import { api } from '@/services/api';
 
+const EMPTY_LINEAGE_RESPONSE: SheetLineageResponse = {
+  sheet_id: '',
+  sheet_name: '',
+  documents: [],
+  cells: {},
+};
+
 export function useLineage(initialLineage?: SheetLineageResponse) {
   const [lineageResponse, setLineageResponse] = useState<SheetLineageResponse>(
-    initialLineage || getMockLineageResponse()
+    initialLineage || EMPTY_LINEAGE_RESPONSE
   );
 
-  // Default selection to primary ending balance cell C4
-  const [selectedCellId, setSelectedCellId] = useState<string>('C4');
+  const [selectedCellId, setSelectedCellId] = useState<string>('');
   const [activeInputIndex, setActiveInputIndex] = useState<number>(0);
   const [activeDocumentId, setActiveDocumentId] = useState<string>('');
-
-  // Initial load from live backend API if available
-  useEffect(() => {
-    let isMounted = true;
-    async function loadInitial() {
-      try {
-        const live = await api.getLineage('default');
-        if (isMounted && live && Object.keys(live.cells || {}).length > 0) {
-          setLineageResponse(live);
-          if (live.cells['C4']?.inputs?.[0]?.doc_id) {
-            setActiveDocumentId(live.cells['C4'].inputs[0].doc_id);
-          } else if (live.documents && live.documents.length > 0) {
-            setActiveDocumentId(live.documents[0].doc_id);
-          }
-        }
-      } catch (err) {
-        console.warn('Initial lineage load error, kept mock fallback:', err);
-      }
-    }
-    loadInitial();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const activeCellLineage: CellLineage | undefined = useMemo(() => {
     return lineageResponse.cells[selectedCellId];
@@ -67,11 +49,12 @@ export function useLineage(initialLineage?: SheetLineageResponse) {
 
   // When auditor clicks a cell in FortuneSheet
   const selectCell = useCallback(
-    (cellId: string) => {
+    (cellId: string, customLineage?: SheetLineageResponse) => {
       setSelectedCellId(cellId);
       setActiveInputIndex(0);
 
-      const cell = lineageResponse.cells[cellId];
+      const activeCells = customLineage?.cells || lineageResponse.cells;
+      const cell = activeCells[cellId];
       if (cell && cell.inputs.length > 0) {
         const firstInput = cell.inputs[0];
         if (firstInput.doc_id) {

@@ -215,6 +215,22 @@ export const PdfAuditViewer: React.FC<PdfAuditViewerProps> = ({
     };
   }, [fileUrl, targetPage, verbatimQuote, applyHighlights]);
 
+  if (!fileUrl) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-500 gap-3 p-6 text-center select-none">
+        <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500">
+          <AlertCircle className="w-6 h-6" />
+        </div>
+        <div className="flex flex-col gap-1 max-w-sm">
+          <span className="text-sm font-semibold text-slate-300">No Statement Document Loaded</span>
+          <span className="text-xs text-slate-500">
+            PDF source statements and verbatim audit highlights will appear here once an audit is active.
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full flex flex-col overflow-hidden bg-slate-950 select-text relative">
       {/* Viewer Toolbar */}

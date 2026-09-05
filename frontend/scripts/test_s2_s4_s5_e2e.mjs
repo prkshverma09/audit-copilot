@@ -77,13 +77,24 @@ async function run() {
   }
 
   // ============================================================
-  // STEP 1: Load app
+  // STEP 1: Load app & Load Demo Audit
   // ============================================================
-  console.log('\n🌐 STEP 1: Page load\n');
+  console.log('\n🌐 STEP 1: Page load & Load Demo Audit\n');
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-  await new Promise(r => setTimeout(r, 4000));
+  await sleep(1500);
   const title = await page.title();
   assert('Page loads', title.length > 0, title);
+
+  // Click Load Demo Audit to initialize Flow 2
+  const allBtns0 = await page.$$('button');
+  for (const btn of allBtns0) {
+    const txt = await btn.evaluate(el => el.textContent.trim()).catch(() => '');
+    if (txt.includes('Load Demo Audit')) {
+      await btn.click();
+      await sleep(1500);
+      break;
+    }
+  }
 
   // ============================================================
   // STEP 2: S.4 - Coverage Meter in Header

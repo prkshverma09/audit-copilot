@@ -13,10 +13,10 @@ export function usePipeline(customCells?: Record<string, CellLineage>) {
   const computeStats = () => {
     if (!customCells || Object.keys(customCells).length === 0) {
       return {
-        totalCells: 18,
-        verifiedCells: 17,
-        reviewRequired: 1,
-        coveragePercent: 94,
+        totalCells: 0,
+        verifiedCells: 0,
+        reviewRequired: 0,
+        coveragePercent: 0,
         hallucinations: 0,
       };
     }

@@ -81,40 +81,54 @@ export const Header: React.FC<HeaderProps> = ({
             name="statement-selector"
             value={activeDocumentId}
             onChange={(e) => onSelectDocument(e.target.value)}
-            className="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer max-w-[240px] truncate"
+            disabled={documents.length === 0}
+            className="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer max-w-[240px] truncate disabled:opacity-50"
           >
-            {documents.map((doc) => (
-              <option key={doc.doc_id} value={doc.doc_id} className="bg-slate-900 text-slate-200">
-                {doc.filename}
+            {documents.length === 0 ? (
+              <option value="" className="bg-slate-900 text-slate-400">
+                (No statements loaded)
               </option>
-            ))}
+            ) : (
+              documents.map((doc) => (
+                <option key={doc.doc_id} value={doc.doc_id} className="bg-slate-900 text-slate-200">
+                  {doc.filename}
+                </option>
+              ))
+            )}
           </select>
         </div>
 
         {/* Audit Confidence Pill */}
-        <div className="hidden lg:flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg text-xs">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-          <span className="text-emerald-300 font-semibold">Lineage Coverage:</span>
-          <span className="text-emerald-400 font-bold font-mono">
-            {coverageStats.coveragePercent}%
-          </span>
-          <span className="text-slate-500">|</span>
-          <span className="text-slate-400">
-            {coverageStats.verifiedCells}/{coverageStats.totalCells} Traced
-          </span>
-          {coverageStats.reviewRequired > 0 && (
-            <>
-              <span className="text-slate-500">|</span>
-              <span className="text-amber-400 font-medium flex items-center gap-1">
-                <AlertTriangle className="w-3 h-3" />
-                {coverageStats.reviewRequired} Review
-              </span>
-            </>
-          )}
-        </div>
+        {coverageStats.totalCells > 0 ? (
+          <div className="hidden lg:flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg text-xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span className="text-emerald-300 font-semibold">Lineage Coverage:</span>
+            <span className="text-emerald-400 font-bold font-mono">
+              {coverageStats.coveragePercent}%
+            </span>
+            <span className="text-slate-500">|</span>
+            <span className="text-slate-400">
+              {coverageStats.verifiedCells}/{coverageStats.totalCells} Traced
+            </span>
+            {coverageStats.reviewRequired > 0 && (
+              <>
+                <span className="text-slate-500">|</span>
+                <span className="text-amber-400 font-medium flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  {coverageStats.reviewRequired} Review
+                </span>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="hidden lg:flex items-center space-x-2 bg-slate-800/40 border border-audit-border px-3 py-1 rounded-lg text-xs text-slate-400">
+            <Sparkles className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <span>Ready for Audit Ingestion</span>
+          </div>
+        )}
 
         {/* Footing & Tie-Out Engine Button */}
-        {onOpenTieOutModal && (
+        {onOpenTieOutModal && tieOutReport && (
           <button
             onClick={onOpenTieOutModal}
             className={`hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer shadow-sm ${

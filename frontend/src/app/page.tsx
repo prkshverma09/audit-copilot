@@ -14,10 +14,20 @@ import { getMockFortuneData } from '@/services/mockData';
 import { api } from '@/services/api';
 import { TieOutReport } from '@/types/lineage';
 import { TieOutBridgeModal } from '@/components/sheet/TieOutBridgeModal';
-import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { Sparkles, CheckCircle2, ArrowRight, Upload, ShieldCheck } from 'lucide-react';
+
+const EMPTY_FORTUNE_DATA: any[] = [
+  {
+    name: 'Reconciliation',
+    id: 'sheet_empty',
+    celldata: [],
+    rowCount: 30,
+    columnCount: 15,
+  },
+];
 
 export default function AuditCopilotPage() {
-  const [sheetData, setSheetData] = useState<any[]>(getMockFortuneData());
+  const [sheetData, setSheetData] = useState<any[]>(EMPTY_FORTUNE_DATA);
   const [jumpRequest, setJumpRequest] = useState<{ page: number; ts: number } | null>(null);
 
   // Task S.1: Automated Tie-Out & Footing Engine State
@@ -50,34 +60,6 @@ export default function AuditCopilotPage() {
     coverageStats,
   } = usePipeline(lineageResponse.cells);
 
-
-  // Sync initial live sheet data and tie-out report from backend if available
-  useEffect(() => {
-    let isMounted = true;
-    async function loadLiveData() {
-      try {
-        const [liveSheet, initialTieOut] = await Promise.all([
-          api.getSheetData('default'),
-          api.getTieOutReport('default', false),
-        ]);
-        if (isMounted) {
-          if (liveSheet && liveSheet.length > 0 && liveSheet[0].celldata?.length) {
-            setSheetData(liveSheet);
-          }
-          if (initialTieOut) {
-            setTieOutReport(initialTieOut);
-          }
-        }
-      } catch (err) {
-        console.warn('Could not load live sheet/tieout data, kept fallback:', err);
-      }
-    }
-    loadLiveData();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   const loadDemoAudit = async () => {
     try {
       const [defaultLineage, defaultSheet, defaultTieOut] = await Promise.all([
@@ -90,7 +72,7 @@ export default function AuditCopilotPage() {
         if (defaultLineage.documents && defaultLineage.documents.length > 0) {
           selectDocument(defaultLineage.documents[0].doc_id);
         }
-        selectCell('C4');
+        selectCell('C4', defaultLineage);
       }
       if (defaultSheet && defaultSheet.length > 0) {
         setSheetData(defaultSheet);
@@ -115,7 +97,7 @@ export default function AuditCopilotPage() {
         if (latestLineage.documents && latestLineage.documents.length > 0) {
           selectDocument(latestLineage.documents[0].doc_id);
         }
-        selectCell('C4');
+        selectCell('C4', latestLineage);
       }
       if (latestSheet && latestSheet.length > 0) {
         setSheetData(latestSheet);
@@ -140,13 +122,14 @@ export default function AuditCopilotPage() {
     }
   };
 
-  // Target PDF URL & Page (resolved through API streaming endpoint or fallback)
-  const pdfUrl = api.getDocumentUrl(
-    activeDocument?.doc_id || '',
-    activeDocument?.url || '/mock_documents/20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf'
-  );
+  // Target PDF URL & Page (resolved through API streaming endpoint)
+  const pdfUrl = activeDocument
+    ? api.getDocumentUrl(activeDocument.doc_id, activeDocument.url)
+    : '';
   const targetPage = activeInput?.page_number || 1;
   const verbatimQuote = activeInput?.verbatim_quote || '';
+
+  const hasAuditLoaded = Object.keys(lineageResponse.cells || {}).length > 0;
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-audit-bg">
@@ -192,17 +175,85 @@ export default function AuditCopilotPage() {
           initialSplitRatio={52}
           left={
             <div className="w-full h-full flex flex-col overflow-hidden">
-              {/* Spreadsheet Grid View */}
-              <div className="flex-1 w-full h-full overflow-hidden">
-                <SpreadsheetView
-                  sheetData={sheetData}
-                  lineageData={lineageResponse}
-                  selectedCellId={selectedCellId}
-                  onSelectAuditCell={selectCell}
-                  onChange={setSheetData}
-                  tieOutReport={tieOutReport}
-                />
-              </div>
+              {/* Spreadsheet Grid View or Intake Card */}
+              {!hasAuditLoaded ? (
+                <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-audit-bg/95 relative overflow-hidden select-none">
+                  <div className="max-w-md w-full bg-audit-panel border border-audit-border rounded-2xl p-8 shadow-2xl flex flex-col items-center text-center gap-6 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-sky-500 to-emerald-400 p-[1px] shadow-lg shadow-sky-500/20">
+                      <div className="w-full h-full bg-slate-950 rounded-[15px] flex items-center justify-center">
+                        <Sparkles className="w-7 h-7 text-sky-400" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-lg font-bold text-white tracking-tight">
+                        X-Ray Audit Copilot
+                      </h2>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Autonomous financial data lineage, mathematical footing tie-outs, and character-grounded PDF statement verification.
+                      </p>
+                    </div>
+
+                    <div className="w-full flex flex-col gap-3">
+                      <button
+                        onClick={loadDemoAudit}
+                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent hover:from-amber-500/30 border border-amber-500/40 text-amber-200 text-xs font-semibold flex items-center justify-between transition-all group shadow-sm hover:shadow-amber-500/10 cursor-pointer"
+                      >
+                        <div className="flex items-center space-x-3 text-left">
+                          <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                            <Sparkles className="w-4 h-4 text-amber-400" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-white group-hover:text-amber-300 transition-colors">
+                              Load Demo Audit (Flow 2)
+                            </div>
+                            <div className="text-[11px] text-slate-400">
+                              Calder Fund Q1 • 18 Traced Cells • Tie-Out Bridges
+                            </div>
+                          </div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                      </button>
+
+                      <button
+                        onClick={openUpload}
+                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500/20 via-sky-500/10 to-transparent hover:from-sky-500/30 border border-sky-500/40 text-sky-200 text-xs font-semibold flex items-center justify-between transition-all group shadow-sm hover:shadow-sky-500/10 cursor-pointer"
+                      >
+                        <div className="flex items-center space-x-3 text-left">
+                          <div className="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center shrink-0">
+                            <Upload className="w-4 h-4 text-sky-400" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-white group-hover:text-sky-300 transition-colors">
+                              Upload Statements & Run Audit (Flow 1)
+                            </div>
+                            <div className="text-[11px] text-slate-400">
+                              Ingest PDF statements with LangGraph & Gemini DAG
+                            </div>
+                          </div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-sky-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                      </button>
+                    </div>
+
+                    <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Strict zero-hallucination verification standard</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1 w-full h-full overflow-hidden">
+                  <SpreadsheetView
+                    sheetData={sheetData}
+                    lineageData={lineageResponse}
+                    selectedCellId={selectedCellId}
+                    onSelectAuditCell={selectCell}
+                    onChange={setSheetData}
+                    tieOutReport={tieOutReport}
+                  />
+                </div>
+              )}
             </div>
           }
 
