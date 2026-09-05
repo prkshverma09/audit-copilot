@@ -20,6 +20,7 @@ interface HeaderProps {
   onSelectDocument: (docId: string) => void;
   onOpenUpload: () => void;
   onRunAudit: () => void;
+  onLoadDemoAudit?: () => void;
   onOpenTieOutModal?: () => void;
   tieOutReport?: TieOutReport | null;
   isAuditing?: boolean;
@@ -38,6 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectDocument,
   onOpenUpload,
   onRunAudit,
+  onLoadDemoAudit,
   onOpenTieOutModal,
   tieOutReport,
   isAuditing = false,
@@ -133,6 +135,17 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right: Actions */}
       <div className="flex items-center space-x-2.5">
+        {onLoadDemoAudit && (
+          <button
+            onClick={onLoadDemoAudit}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-semibold text-amber-300 hover:text-amber-200 transition-all duration-150 cursor-pointer shadow-sm"
+            title="Reload official baseline Fund Reconciliation (Flow 2 Demo)"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>Load Demo Audit</span>
+          </button>
+        )}
+
         <button
           onClick={onOpenUpload}
           className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-audit-border bg-audit-bg hover:bg-audit-card text-xs font-medium text-slate-300 hover:text-white transition-all duration-150"

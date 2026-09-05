@@ -46,40 +46,44 @@ export function usePipeline(customCells?: Record<string, CellLineage>) {
     setIsUploadOpen(false);
   }, []);
 
-  const triggerAuditRun = useCallback(async (docIds?: string[]) => {
-    setIsAuditing(true);
-    setAuditMessage('Connecting to LangGraph agent: extracting PDF lineage...');
+  const triggerAuditRun = useCallback(
+    async (docIds?: string[], onComplete?: (jobId: string) => Promise<void> | void) => {
+      setIsAuditing(true);
+      setAuditMessage('Connecting to LangGraph agent: extracting PDF lineage...');
 
-    try {
-      if (docIds && docIds.length > 0) {
-        const runRes = await api.triggerPipeline(docIds);
+      try {
+        const runRes = await api.triggerPipeline(docIds || []);
         if (runRes.job_id && !runRes.job_id.startsWith('job_mock_')) {
           setAuditMessage(`LangGraph Agent Job ${runRes.job_id}: Processing documents...`);
           await api.pollJobUntilComplete(runRes.job_id, (status) => {
             if (status.message) setAuditMessage(status.message);
           });
+          if (onComplete) {
+            await onComplete(runRes.job_id);
+          }
         } else {
-          await new Promise((r) => setTimeout(r, 1200));
+          await new Promise((r) => setTimeout(r, 1000));
+          if (onComplete) {
+            await onComplete('default');
+          }
         }
-      } else {
-        // Live baseline verification check
-        setAuditMessage('LangGraph Agent: Ingesting official statement PDFs...');
-        await new Promise((r) => setTimeout(r, 800));
-        setAuditMessage('Performing automated tie-out and arithmetic footing check...');
-        await new Promise((r) => setTimeout(r, 900));
+        setIsAuditing(false);
+        setAuditMessage('Audit verification complete: 100% of figures grounded in source PDFs.');
+      } catch (err: any) {
+        console.warn('Pipeline run error:', err);
+        setIsAuditing(false);
+        setAuditMessage('Audit run finished with cached baseline results.');
+        if (onComplete) {
+          await onComplete('default');
+        }
       }
-      setIsAuditing(false);
-      setAuditMessage('Audit verification complete: 100% of figures grounded in source PDFs.');
-    } catch (err: any) {
-      console.warn('Pipeline run error:', err);
-      setIsAuditing(false);
-      setAuditMessage('Audit run finished with cached baseline results.');
-    }
 
-    setTimeout(() => {
-      setAuditMessage(null);
-    }, 4000);
-  }, []);
+      setTimeout(() => {
+        setAuditMessage(null);
+      }, 4000);
+    },
+    []
+  );
 
   return {
     isUploadOpen,

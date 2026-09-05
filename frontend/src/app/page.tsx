@@ -78,6 +78,56 @@ export default function AuditCopilotPage() {
     };
   }, []);
 
+  const loadDemoAudit = async () => {
+    try {
+      const [defaultLineage, defaultSheet, defaultTieOut] = await Promise.all([
+        api.getLineage('default'),
+        api.getSheetData('default'),
+        api.getTieOutReport('default', false),
+      ]);
+      if (defaultLineage) {
+        setLineageResponse(defaultLineage);
+        if (defaultLineage.documents && defaultLineage.documents.length > 0) {
+          selectDocument(defaultLineage.documents[0].doc_id);
+        }
+        selectCell('C4');
+      }
+      if (defaultSheet && defaultSheet.length > 0) {
+        setSheetData(defaultSheet);
+      }
+      if (defaultTieOut) {
+        setTieOutReport(defaultTieOut);
+      }
+    } catch (err) {
+      console.warn('Error reloading demo audit:', err);
+    }
+  };
+
+  const refreshAuditData = async (jobOrSheetId = 'latest') => {
+    try {
+      const [latestLineage, latestSheet, latestTieOut] = await Promise.all([
+        api.getLineage(jobOrSheetId),
+        api.getSheetData(jobOrSheetId),
+        api.getTieOutReport(jobOrSheetId, false),
+      ]);
+      if (latestLineage && Object.keys(latestLineage.cells || {}).length > 0) {
+        setLineageResponse(latestLineage);
+        if (latestLineage.documents && latestLineage.documents.length > 0) {
+          selectDocument(latestLineage.documents[0].doc_id);
+        }
+        selectCell('C4');
+      }
+      if (latestSheet && latestSheet.length > 0) {
+        setSheetData(latestSheet);
+      }
+      if (latestTieOut) {
+        setTieOutReport(latestTieOut);
+      }
+    } catch (err) {
+      console.warn('Failed to refresh latest lineage/sheet:', err);
+    }
+  };
+
   const handleToggleSimulateDiscrepancy = async (simulate: boolean) => {
     setIsSimulatingDiscrepancy(simulate);
     try {
@@ -106,7 +156,8 @@ export default function AuditCopilotPage() {
         activeDocumentId={activeDocumentId}
         onSelectDocument={selectDocument}
         onOpenUpload={openUpload}
-        onRunAudit={() => triggerAuditRun()}
+        onRunAudit={() => triggerAuditRun([], (jobId) => refreshAuditData(jobId))}
+        onLoadDemoAudit={loadDemoAudit}
         onOpenTieOutModal={() => setIsTieOutModalOpen(true)}
         tieOutReport={tieOutReport}
         isAuditing={isAuditing}
@@ -192,24 +243,6 @@ export default function AuditCopilotPage() {
         onUploadComplete={async (files, uploadRes) => {
           if (uploadRes?.documents && uploadRes.documents.length > 0) {
             uploadRes.documents.forEach((doc) => addUploadedDocument(doc));
-            try {
-              // Reload latest lineage and sheet from live backend
-              const [latestLineage, latestSheet] = await Promise.all([
-                api.getLineage('latest'),
-                api.getSheetData('latest'),
-              ]);
-              if (latestLineage && Object.keys(latestLineage.cells || {}).length > 0) {
-                setLineageResponse(latestLineage);
-                if (latestLineage.documents && latestLineage.documents.length > 0) {
-                  selectDocument(latestLineage.documents[0].doc_id);
-                }
-              }
-              if (latestSheet && latestSheet.length > 0) {
-                setSheetData(latestSheet);
-              }
-            } catch (err) {
-              console.warn('Failed to refresh latest lineage after upload:', err);
-            }
           } else {
             // Local fallback simulation
             files.forEach((f, idx) => {
@@ -230,7 +263,7 @@ export default function AuditCopilotPage() {
               });
             });
           }
-          triggerAuditRun();
+          await refreshAuditData('latest');
         }}
       />
 

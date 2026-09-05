@@ -69,6 +69,25 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const loadSampleStatements = async () => {
+    try {
+      const sampleDefs = [
+        { name: '20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf', url: '/mock_documents/20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf' },
+        { name: '20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf', url: '/mock_documents/20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf' },
+      ];
+      const files: File[] = [];
+      for (const def of sampleDefs) {
+        const res = await fetch(def.url);
+        const blob = await res.blob();
+        const f = new File([blob], def.name, { type: 'application/pdf' });
+        files.push(f);
+      }
+      setSelectedFiles(files);
+    } catch (err) {
+      console.warn('Could not load sample statements:', err);
+    }
+  };
+
   const startExtraction = async () => {
     if (selectedFiles.length === 0) return;
 
@@ -195,9 +214,20 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
                 <p className="text-xs font-semibold text-white mb-1">
                   Drag and drop PDF statements here, or <span className="text-sky-400 underline">browse</span>
                 </p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-400 mb-3">
                   Supports multiple files (Calder, Northern Trust, J.P. Morgan statements)
                 </p>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    loadSampleStatements();
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 hover:text-sky-200 text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-sm"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                  <span>Select Official Calder Statements (2 PDFs)</span>
+                </button>
               </div>
 
               {/* Selected Files List */}
