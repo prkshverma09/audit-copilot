@@ -177,9 +177,17 @@ async function run() {
 
   console.log('📊 Primary Sheet C4 Verification:');
   console.log('   Banner:', primaryInspection.banner);
-  console.log('   Highlights:', primaryInspection.highlights);
-
   await page.screenshot({ path: path.join(ARTIFACT_DIR, 'primary_sheet_c4_verified.png') });
+
+  // Step 7: Select C6 to verify streamlined multi-citation inspector
+  console.log('Selecting C6 to inspect streamlined multi-citation UI...');
+  await page.evaluate(() => {
+    if (window.selectAuditCell) {
+      window.selectAuditCell('C6');
+    }
+  });
+  await sleep(2000);
+  await page.screenshot({ path: path.join(ARTIFACT_DIR, 'streamlined_c6_inspector_verified.png') });
 
   await browser.close();
   console.log('🎉 ALL AUDIT TRAIL VERIFICATION STEPS PASSED!');

@@ -74,7 +74,7 @@ export default function AuditCopilotPage() {
         }
         selectCell('C4', defaultLineage);
       }
-      const sheet = (defaultSheet && defaultSheet.length > 0 && defaultSheet[0]?.celldata?.length > 0)
+      const sheet = (defaultSheet && defaultSheet.length > 0 && (defaultSheet[0]?.celldata?.length ?? 0) > 0)
         ? defaultSheet
         : getMockFortuneData();
       setSheetData(sheet);
@@ -100,7 +100,7 @@ export default function AuditCopilotPage() {
         }
         selectCell('C4', latestLineage);
       }
-      const sheet = (latestSheet && latestSheet.length > 0 && latestSheet[0]?.celldata?.length > 0)
+      const sheet = (latestSheet && latestSheet.length > 0 && (latestSheet[0]?.celldata?.length ?? 0) > 0)
         ? latestSheet
         : getMockFortuneData();
       setSheetData(sheet);
