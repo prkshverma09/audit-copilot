@@ -1,11 +1,15 @@
 import re
 import os
 import json
+import logging
 from typing import Any, Dict, List
 from app.graph.state import GraphState
+from app.core.statement_parser import extract_transactions_from_pdf, build_dynamic_staging_and_diu_sheets
+
+logger = logging.getLogger("audit-copilot.sheet_map_node")
 
 def _get_dataset_template_sheets() -> List[Dict[str, Any]]:
-    """Load the official Staging Sheet, DIU Journal Entries, and Chart of Accounts sheets from the hackathon working file."""
+    """Load the official Chart of Accounts master sheet from the hackathon working file."""
     fixtures_path = os.path.join(os.path.dirname(__file__), "..", "..", "fixtures", "hackathon_workbook_sheets.json")
     if os.path.exists(fixtures_path):
         try:
@@ -14,6 +18,42 @@ def _get_dataset_template_sheets() -> List[Dict[str, Any]]:
         except Exception:
             pass
     return []
+
+def _get_dynamic_sheets_for_state(state: GraphState) -> List[Dict[str, Any]]:
+    """
+    Dynamically extract transactions and journal entries from the raw uploaded statement PDFs.
+    """
+    raw_docs = state.get("raw_documents", [])
+    parsed_docs = []
+    if raw_docs:
+        for d in raw_docs:
+            try:
+                parsed = extract_transactions_from_pdf(d["pdf_bytes"], d["filename"], d.get("doc_id", "doc_"))
+                parsed_docs.append(parsed)
+            except Exception as e:
+                logger.warning(f"Error parsing {d.get('filename')}: {e}")
+
+    if not parsed_docs:
+        # Load from disk for demo flow
+        statements_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "Ylookup Hackathon Datasets", "01-bank-statements-to-journal-entries", "statements"))
+        demo_files = ["20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf", "20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf"]
+        for df in demo_files:
+            fpath = os.path.join(statements_dir, df)
+            if os.path.exists(fpath):
+                try:
+                    with open(fpath, "rb") as f:
+                        parsed_docs.append(extract_transactions_from_pdf(f.read(), df, "doc_" + df[:10]))
+                except Exception as e:
+                    logger.warning(f"Error reading demo statement {df}: {e}")
+
+    dynamic_sheets = build_dynamic_staging_and_diu_sheets(parsed_docs) if parsed_docs else []
+
+    # Chart of Accounts reference sheet
+    coa_sheet = next((s for s in _get_dataset_template_sheets() if "Chart of Accounts" in s.get("name", "")), None)
+    if coa_sheet:
+        dynamic_sheets.append(coa_sheet)
+
+    return dynamic_sheets
 
 def cell_id_to_indices(cell_id: str) -> tuple[int, int]:
     """Convert Excel coordinate like 'C5' to 0-indexed (row, col) tuple (4, 2)."""
@@ -142,7 +182,7 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
             {"r": 13, "c": 4, "v": {"v": "REVIEW REQUIRED", "m": "REVIEW REQUIRED", "fc": "#F59E0B", "bl": 1}},
             {"r": 13, "c": 5, "v": {"v": "Calder EUR 0894 (p. 1)", "m": "Calder EUR 0894 (p. 1)", "fc": "#F59E0B"}}
         ]
-        dataset_sheets = _get_dataset_template_sheets()
+        dataset_sheets = _get_dynamic_sheets_for_state(state)
         primary_sheet = {
             "name": "Portfolio Reconciliation",
             "id": "sheet_portfolio_multi_statement",
@@ -243,7 +283,7 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
             {"r": 13, "c": 4, "v": {"v": "REVIEW REQUIRED", "m": "REVIEW REQUIRED", "fc": "#F59E0B", "bl": 1}},
             {"r": 13, "c": 5, "v": {"v": "Calder EUR 0894 (p. 1)", "m": "Calder EUR 0894 (p. 1)", "fc": "#F59E0B"}}
         ]
-        dataset_sheets = _get_dataset_template_sheets()
+        dataset_sheets = _get_dynamic_sheets_for_state(state)
         primary_sheet = {
             "name": sheet_title[:30],
             "id": "sheet_fund_reconciliation_2026_q1",
@@ -361,7 +401,7 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
 
         placed_rows = target_r + 1
 
-    dataset_sheets = _get_dataset_template_sheets()
+    dataset_sheets = _get_dynamic_sheets_for_state(state)
     primary_sheet = {
         "name": sheet_title[:30],
         "id": "sheet_audit_reconciliation",
