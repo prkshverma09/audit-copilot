@@ -5,17 +5,35 @@
 
 ---
 
-## ⚡ 1. Run in One Command
+## ⚡ 1. Quick Start
 
-Clone the repository and launch everything with Docker:
-
+Clone the repository:
 ```bash
 git clone https://github.com/prkshverma09/audit-copilot.git
 cd audit-copilot
+```
+
+You can run the project in **two ways**:
+
+### Option A: Instant Evaluation (No API Key Required)
+Runs offline using our built-in PDF coordinate extraction & automated reconciliation engine. Perfect for fast, zero-friction testing:
+```bash
 ./run_docker.sh
 ```
 
-*(Alternatively, if you prefer running without Docker: `./start_all.sh`)*
+---
+
+### Option B: Live Google Gemini 2.5 AI Mode (With API Key)
+Enables live **Google Gemini 2.5 Flash & Pro** multimodal PDF statement extraction:
+```bash
+export GEMINI_API_KEY="your-gemini-api-key"
+./run_docker.sh
+```
+*(Or create a `.env` file in the root directory containing `GEMINI_API_KEY=your_key`)*
+
+---
+
+*(Alternatively, to run natively without Docker: `./start_all.sh`)*
 
 Once started, open your browser:
 👉 **[http://localhost:3000](http://localhost:3000)**
@@ -58,7 +76,7 @@ Once data is loaded in the sheet, test these 3 key verification features:
 
 ### 2. Inspect the Automated Reconciliation Engine ("The Bridges")
 - Select cell **`C6`** (Consolidated Cash Balance).
-- In the top formula banner, click **`Inspect Reconciliation`** (or click the **`Reconciled: 3/4`** badge in the header).
+- Click the **`Reconciled: 3/4`** button in the top header (or click the green **`✓ Fully Reconciled`** pill in the formula ribbon).
 - **The Reconciliation Modal opens and verifies:**
   - **Bridge 1 (Consolidation)**: `Fund I (€13.2M) + Fund II (€20k) = €13.26M` with **`€0.00 (Reconciled)`** delta.
   - **Bridge 2 (Intercompany Clearing)**: Fund I's `-€1.62` transfer is cleared by Fund II's two tranches (`€0.85 + €0.77`), verifying net-zero settlement.
