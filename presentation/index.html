@@ -110,6 +110,13 @@
       flex: 1;
       min-height: 0;
     }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5vw;
+      flex: 1;
+      min-height: 0;
+    }
 
     /* Minimalist Cards */
     .card {
@@ -348,29 +355,35 @@
       <h1 class="slide-title">The Solution: X-Ray Audit Copilot</h1>
       <p class="slide-subtitle">Gemini-powered financial lineage & sub-millimeter character-grounded statement matching</p>
 
-      <div class="grid-2">
-        <!-- 3 Solution Pillars -->
-        <div style="display: flex; flex-direction: column; gap: 0.8vw;">
-          <div class="card sky">
-            <div class="card-label">Engine 1 • Gemini 2.5 Multimodal Lineage</div>
-            <div class="card-title">Extracts Verbatim Financial Entities</div>
-            <div class="card-desc">Google Gemini multimodal understanding extracts statement metadata, accounts, and verbatim citation quotes into structured JSON.</div>
-          </div>
-          <div class="card emerald">
-            <div class="card-label">Engine 2 • Automated Math Verification</div>
-            <div class="card-title">Instant Zero-Variance Re-computation</div>
-            <div class="card-desc">Python AST engine recalculates vertical ledger sums (<code style="color:#34d399;font-family:'JetBrains Mono'">C4 + D5 = C6</code>) and cross-fund balances with zero delta.</div>
-          </div>
-          <div class="card amber">
-            <div class="card-label">Engine 3 • Grounded Statement Matching</div>
-            <div class="card-title">Sub-Millimeter Coordinate Highlighting</div>
-            <div class="card-desc">Extracts exact bounding boxes (<code style="color:#f59e0b;font-family:'JetBrains Mono'">bbox</code>) from PDF statements for 100% verified, non-hallucinatory citations.</div>
+      <div class="grid-3">
+        <div class="card sky">
+          <div class="card-label">Engine 1 • Perception</div>
+          <div class="card-title">Gemini 2.5 Multimodal Lineage</div>
+          <div class="card-desc">Google Gemini extracts complex statement metadata, account numbers, and verbatim quotes directly into structured JSON schemas.</div>
+          <div style="margin-top: 1.2vw; border-top: 1px solid #1e293b; padding-top: 0.8vw; display: flex; flex-direction: column; gap: 0.4vw; font-size: 0.85vw; color: #94a3b8;">
+            <div style="display:flex;align-items:center;gap:0.4vw;"><span style="color:#38bdf8;">✓</span> 100% Verbatim quote extraction</div>
+            <div style="display:flex;align-items:center;gap:0.4vw;"><span style="color:#38bdf8;">✓</span> Multi-fund statement classification</div>
           </div>
         </div>
 
-        <!-- Concept Image Visual -->
-        <div class="image-card">
-          <img src="assets/concept.jpg" alt="X-Ray Audit Copilot Concept Diagram">
+        <div class="card emerald">
+          <div class="card-label">Engine 2 • Reasoning</div>
+          <div class="card-title">Deterministic Math Verification</div>
+          <div class="card-desc">Python AST engine deconstructs Excel formulas (<code style="color:#34d399;font-family:'JetBrains Mono'">C4 + D5 = C6</code>) and re-computes arithmetic sums with zero delta tolerance.</div>
+          <div style="margin-top: 1.2vw; border-top: 1px solid #1e293b; padding-top: 0.8vw; display: flex; flex-direction: column; gap: 0.4vw; font-size: 0.85vw; color: #94a3b8;">
+            <div style="display:flex;align-items:center;gap:0.4vw;"><span style="color:#10b981;">✓</span> Zero LLM math hallucinations</div>
+            <div style="display:flex;align-items:center;gap:0.4vw;"><span style="color:#10b981;">✓</span> Real-time cross-fund reconciliation</div>
+          </div>
+        </div>
+
+        <div class="card amber">
+          <div class="card-label">Engine 3 • Provenance</div>
+          <div class="card-title">Sub-Millimeter Statement Matching</div>
+          <div class="card-desc">PyMuPDF and pdfplumber pinpoint exact bounding boxes (<code style="color:#f59e0b;font-family:'JetBrains Mono'">bbox</code>) on source PDFs, linking every cell to its origin document.</div>
+          <div style="margin-top: 1.2vw; border-top: 1px solid #1e293b; padding-top: 0.8vw; display: flex; flex-direction: column; gap: 0.4vw; font-size: 0.85vw; color: #94a3b8;">
+            <div style="display:flex;align-items:center;gap:0.4vw;"><span style="color:#f59e0b;">✓</span> Sub-millimeter visual highlights</div>
+            <div style="display:flex;align-items:center;gap:0.4vw;"><span style="color:#f59e0b;">✓</span> Synchronized split-screen audit trail</div>
+          </div>
         </div>
       </div>
     </div>

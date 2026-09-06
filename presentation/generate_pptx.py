@@ -169,32 +169,30 @@ def create_deck():
     ]
     
     for i, (head, desc, color) in enumerate(p_data):
-        y = 1.9 + (i * 1.65)
-        card = s2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(y), Inches(5.5), Inches(1.45))
+        x = Inches(0.8 + (i * 4.0))
+        card = s2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, Inches(2.0), Inches(3.7), Inches(4.7))
         card.fill.solid()
         card.fill.fore_color.rgb = C_PANEL
         card.line.color.rgb = C_BORDER
         card.line.width = Pt(1)
         
-        tb = s2.shapes.add_textbox(Inches(1.05), Inches(y + 0.18), Inches(5.0), Inches(1.1))
+        tb = s2.shapes.add_textbox(x + Inches(0.25), Inches(2.3), Inches(3.2), Inches(4.1))
         tf = tb.text_frame
         tf.word_wrap = True
         tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
         
         p0 = tf.paragraphs[0]
         p0.text = head
-        p0.font.size = Pt(12)
+        p0.font.size = Pt(14)
         p0.font.bold = True
         p0.font.color.rgb = color
-        p0.space_after = Pt(4)
+        p0.space_after = Pt(12)
         
         p1 = tf.add_paragraph()
         p1.text = desc
-        p1.font.size = Pt(11)
+        p1.font.size = Pt(12)
         p1.font.color.rgb = C_SLATE
-
-    if os.path.exists(concept_img):
-        s2.shapes.add_picture(concept_img, Inches(6.6), Inches(1.9), width=Inches(5.9))
+        p1.space_after = Pt(14)
 
     # ==========================================
     # SLIDE 3: HIGH LEVEL ARCHITECTURE
