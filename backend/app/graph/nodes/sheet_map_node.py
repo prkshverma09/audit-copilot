@@ -1,6 +1,19 @@
 import re
+import os
+import json
 from typing import Any, Dict, List
 from app.graph.state import GraphState
+
+def _get_dataset_template_sheets() -> List[Dict[str, Any]]:
+    """Load the official Staging Sheet, DIU Journal Entries, and Chart of Accounts sheets from the hackathon working file."""
+    fixtures_path = os.path.join(os.path.dirname(__file__), "..", "..", "fixtures", "hackathon_workbook_sheets.json")
+    if os.path.exists(fixtures_path):
+        try:
+            with open(fixtures_path, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
 
 def cell_id_to_indices(cell_id: str) -> tuple[int, int]:
     """Convert Excel coordinate like 'C5' to 0-indexed (row, col) tuple (4, 2)."""
@@ -129,16 +142,22 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
             {"r": 13, "c": 4, "v": {"v": "REVIEW REQUIRED", "m": "REVIEW REQUIRED", "fc": "#F59E0B", "bl": 1}},
             {"r": 13, "c": 5, "v": {"v": "Calder EUR 0894 (p. 1)", "m": "Calder EUR 0894 (p. 1)", "fc": "#F59E0B"}}
         ]
+        dataset_sheets = _get_dataset_template_sheets()
+        primary_sheet = {
+            "name": "Portfolio Reconciliation",
+            "id": "sheet_portfolio_multi_statement",
+            "status": 1,
+            "order": 0,
+            "rowCount": 30,
+            "columnCount": 10,
+            "celldata": celldata
+        }
+        all_sheets = [primary_sheet] + [
+            {**s, "order": idx + 1, "status": 0}
+            for idx, s in enumerate(dataset_sheets)
+        ]
         return {
-            "fortune_sheet_data": [{
-                "name": "Portfolio Reconciliation",
-                "id": "sheet_portfolio_multi_statement",
-                "status": 1,
-                "order": 0,
-                "rowCount": 30,
-                "columnCount": 10,
-                "celldata": celldata
-            }]
+            "fortune_sheet_data": all_sheets
         }
 
     # If canonical Fund I / Fund II reconciliation is present, build multi-fund matrix
@@ -224,16 +243,22 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
             {"r": 13, "c": 4, "v": {"v": "REVIEW REQUIRED", "m": "REVIEW REQUIRED", "fc": "#F59E0B", "bl": 1}},
             {"r": 13, "c": 5, "v": {"v": "Calder EUR 0894 (p. 1)", "m": "Calder EUR 0894 (p. 1)", "fc": "#F59E0B"}}
         ]
+        dataset_sheets = _get_dataset_template_sheets()
+        primary_sheet = {
+            "name": sheet_title[:30],
+            "id": "sheet_fund_reconciliation_2026_q1",
+            "status": 1,
+            "order": 0,
+            "rowCount": 30,
+            "columnCount": 10,
+            "celldata": celldata
+        }
+        all_sheets = [primary_sheet] + [
+            {**s, "order": idx + 1, "status": 0}
+            for idx, s in enumerate(dataset_sheets)
+        ]
         return {
-            "fortune_sheet_data": [{
-                "name": sheet_title[:30],
-                "id": "sheet_fund_reconciliation_2026_q1",
-                "status": 1,
-                "order": 0,
-                "rowCount": 30,
-                "columnCount": 10,
-                "celldata": celldata
-            }]
+            "fortune_sheet_data": all_sheets
         }
 
     celldata: List[Dict[str, Any]] = []
@@ -336,16 +361,19 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
 
         placed_rows = target_r + 1
 
-    fortune_sheet_data = [
-        {
-            "name": sheet_title[:30],
-            "id": "sheet_audit_reconciliation",
-            "status": 1,
-            "order": 0,
-            "row": max(30, placed_rows + 5),
-            "column": 10,
-            "celldata": celldata
-        }
+    dataset_sheets = _get_dataset_template_sheets()
+    primary_sheet = {
+        "name": sheet_title[:30],
+        "id": "sheet_audit_reconciliation",
+        "status": 1,
+        "order": 0,
+        "row": max(30, placed_rows + 5),
+        "column": 10,
+        "celldata": celldata
+    }
+    fortune_sheet_data = [primary_sheet] + [
+        {**s, "order": idx + 1, "status": 0}
+        for idx, s in enumerate(dataset_sheets)
     ]
 
     return {"fortune_sheet_data": fortune_sheet_data}
