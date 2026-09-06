@@ -165,7 +165,7 @@ export default function AuditCopilotPage() {
             <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
             <span className="font-medium">{auditMessage}</span>
           </div>
-          <span className="text-[10px] text-sky-400 font-mono">LangGraph Agent Active</span>
+          <span className="text-[10px] text-sky-400 font-mono">Audit Engine Active</span>
         </div>
       )}
 
@@ -302,7 +302,7 @@ export default function AuditCopilotPage() {
       <FileDropzone
         isOpen={isUploadOpen}
         onClose={closeUpload}
-        onUploadComplete={async (files, uploadRes) => {
+        onUploadComplete={async (files, uploadRes, completedJobId) => {
           if (uploadRes?.documents && uploadRes.documents.length > 0) {
             uploadRes.documents.forEach((doc) => addUploadedDocument(doc));
           } else {
@@ -325,7 +325,7 @@ export default function AuditCopilotPage() {
               });
             });
           }
-          await refreshAuditData('latest');
+          await refreshAuditData(completedJobId || 'latest');
         }}
       />
 

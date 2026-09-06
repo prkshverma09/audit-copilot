@@ -21,6 +21,10 @@ class VerifyTieOutRequest(BaseModel):
 
 
 def _get_lineage(job_id: str) -> SheetLineageResponse:
+    if job_id == "latest":
+        for job in reversed(list(jobs_registry.values())):
+            if job.status == "completed" and job.result:
+                return job.result
     job = jobs_registry.get(job_id)
     if job and job.result:
         return job.result

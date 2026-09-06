@@ -49,12 +49,12 @@ export function usePipeline(customCells?: Record<string, CellLineage>) {
   const triggerAuditRun = useCallback(
     async (docIds?: string[], onComplete?: (jobId: string) => Promise<void> | void) => {
       setIsAuditing(true);
-      setAuditMessage('Connecting to LangGraph agent: extracting PDF lineage...');
+      setAuditMessage('Analyzing statement lineage and tie-outs...');
 
       try {
         const runRes = await api.triggerPipeline(docIds || []);
         if (runRes.job_id && !runRes.job_id.startsWith('job_mock_')) {
-          setAuditMessage(`LangGraph Agent Job ${runRes.job_id}: Processing documents...`);
+          setAuditMessage(`Processing audit job ${runRes.job_id}: reconciling statements...`);
           await api.pollJobUntilComplete(runRes.job_id, (status) => {
             if (status.message) setAuditMessage(status.message);
           });

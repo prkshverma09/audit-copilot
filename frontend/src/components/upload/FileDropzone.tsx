@@ -18,7 +18,7 @@ import { api, UploadResponse } from '@/services/api';
 interface FileDropzoneProps {
   isOpen: boolean;
   onClose: () => void;
-  onUploadComplete?: (files: File[], uploadRes?: UploadResponse) => void;
+  onUploadComplete?: (files: File[], uploadRes?: UploadResponse, jobId?: string) => void;
 }
 
 type PipelineStep = 'idle' | 'classifying' | 'extracting' | 'generating' | 'completed';
@@ -100,7 +100,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
       setProgressPercent(50);
 
       setPipelineStep('extracting');
-      // 2. Trigger LangGraph extraction pipeline
+      // 2. Trigger extraction pipeline
       const docIds = uploadRes?.doc_ids || [];
       const pipelineRes = await api.triggerPipeline(docIds);
       setProgressPercent(75);
@@ -121,7 +121,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
       setPipelineStep('completed');
 
       if (onUploadComplete) {
-        onUploadComplete(selectedFiles, uploadRes);
+        onUploadComplete(selectedFiles, uploadRes, pipelineRes?.job_id);
       }
     } catch (err) {
       console.warn('Backend upload/pipeline error, falling back to local simulation:', err);
@@ -270,7 +270,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-white flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-sky-400" />
-                  LangGraph Autonomous Audit Extraction
+                  Autonomous Statement Extraction & Verification
                 </span>
                 <span className="font-mono text-sky-400 font-bold">{progressPercent}%</span>
               </div>
@@ -301,7 +301,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
                   <div className="flex flex-col">
                     <span className="font-semibold">Document Classification & Layout Parsing</span>
                     <span className="text-[11px] text-slate-400">
-                      Gemini 1.5 Flash: Categorizes statements and indexes reporting periods
+                      Categorizes entity statements, validates structures, and indexes reporting periods
                     </span>
                   </div>
                 </div>
@@ -324,9 +324,9 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
                     <div className="w-4 h-4 rounded-full border border-slate-600 shrink-0" />
                   )}
                   <div className="flex flex-col">
-                    <span className="font-semibold">Verbatim Lineage & Equation Reasoning</span>
+                    <span className="font-semibold">Verbatim Lineage & Quote Verification</span>
                     <span className="text-[11px] text-slate-400">
-                      Gemini 1.5 Pro: Multimodal table extraction with exact character quote citations
+                      Extracts ledger balances, transactions, and exact character quote citations
                     </span>
                   </div>
                 </div>
@@ -349,9 +349,9 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
                     <div className="w-4 h-4 rounded-full border border-slate-600 shrink-0" />
                   )}
                   <div className="flex flex-col">
-                    <span className="font-semibold">FortuneSheet Grid & Footing Tie-Out Assembly</span>
+                    <span className="font-semibold">Audit Grid & Footing Tie-Out Assembly</span>
                     <span className="text-[11px] text-slate-400">
-                      Formats financial cells and synchronizes coordinates with PDF viewer
+                      Formats financial cells, computes tie-out footings, and links evidence citations
                     </span>
                   </div>
                 </div>
@@ -369,7 +369,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
                 Audit Grid Ready for Verification
               </span>
             ) : (
-              <span>Extraction grounded by Gemini Multimodal SDK</span>
+              <span>Direct character-level grounding and cryptographic verification</span>
             )}
           </div>
 

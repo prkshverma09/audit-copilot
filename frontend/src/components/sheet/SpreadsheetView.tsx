@@ -13,7 +13,7 @@ const Workbook = dynamic(
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center bg-audit-panel text-slate-400 gap-3">
         <Loader2 className="w-8 h-8 animate-spin text-sky-400" />
-        <span className="text-sm font-medium">Initializing FortuneSheet Grid Engine...</span>
+        <span className="text-sm font-medium">Initializing Audit Grid...</span>
       </div>
     ),
   }
@@ -177,17 +177,24 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
     };
   }, []);
 
+  const sheetKey = useMemo(() => {
+    if (!sheetData || sheetData.length === 0) return 'empty_sheet';
+    const first = sheetData[0];
+    return `${first?.id || 'sheet'}_${first?.name || 'name'}`;
+  }, [sheetData?.[0]?.id, sheetData?.[0]?.name]);
+
   const clonedData = useMemo(() => {
     try {
       return JSON.parse(JSON.stringify(sheetData));
     } catch {
       return sheetData;
     }
-  }, []);
+  }, [sheetData?.[0]?.id, sheetData?.[0]?.name]);
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-audit-panel">
       <Workbook
+        key={sheetKey}
         data={clonedData as any}
         onChange={onChange}
         hooks={hooks as any}

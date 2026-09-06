@@ -78,25 +78,6 @@ async def lifespan(app: FastAPI):
         except Exception as err:
             logger.warning(f"Could not load baseline fixture: {err}")
 
-    # Run deep pipeline in background task if staged_ids exist
-    if staged_ids:
-        import asyncio
-        async def _background_reconcile():
-            try:
-                res = await run_audit_pipeline(staged_ids, sheet_id="sheet_fund_reconciliation_2026_q1")
-                jobs_registry["auto_startup"] = JobStatus(
-                    job_id="auto_startup",
-                    status="completed",
-                    progress=1.0,
-                    message="Fund Cash & Tie-Out Reconciliation ready.",
-                    result=res
-                )
-                logger.info("Background reconciliation completed successfully.")
-            except Exception as e:
-                logger.warning(f"Background reconciliation error: {e}")
-
-        asyncio.create_task(_background_reconcile())
-
     yield
     logger.info("Shutting down X-Ray Audit Copilot Backend.")
 

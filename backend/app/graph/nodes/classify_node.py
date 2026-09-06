@@ -13,18 +13,20 @@ async def classify_node(state: GraphState) -> Dict[str, Any]:
     entity names, and reporting periods for all uploaded documents.
     """
     raw_docs = state.get("raw_documents", [])
-    classified_docs: List[DocumentMetadata] = []
-
-    for doc in raw_docs:
+    async def _classify_single(doc: Dict[str, Any]) -> DocumentMetadata:
         doc_id = doc["doc_id"]
         filename = doc["filename"]
         pdf_bytes = doc["pdf_bytes"]
         page_count = doc["page_count"]
         url = doc["url"]
 
-        cls_result = await gemini_service.classify_document(pdf_bytes, filename)
-        
-        meta = DocumentMetadata(
+        try:
+            cls_result = await gemini_service.classify_document(pdf_bytes, filename)
+        except Exception as e:
+            logger.warning(f"Classification failed for {filename}, using fallback: {e}")
+            cls_result = {}
+
+        return DocumentMetadata(
             doc_id=doc_id,
             filename=filename,
             url=url,
@@ -33,6 +35,7 @@ async def classify_node(state: GraphState) -> Dict[str, Any]:
             entity_name=cls_result.get("entity_name", "Calder Fund"),
             reporting_period=cls_result.get("reporting_period", "2026-03-31")
         )
-        classified_docs.append(meta)
 
-    return {"classified_docs": classified_docs}
+    import asyncio
+    classified_docs = await asyncio.gather(*[_classify_single(doc) for doc in raw_docs])
+    return {"classified_docs": list(classified_docs)}
