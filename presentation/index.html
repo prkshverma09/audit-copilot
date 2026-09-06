@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X-Ray Audit Copilot — Demo Video Slides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #060913;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    /* 16:9 Aspect Ratio Presentation Frame */
+    .deck-container {
+      position: relative;
+      width: 100vw;
+      height: 56.25vw; /* 16:9 ratio */
+      max-height: 100vh;
+      max-width: 177.78vh; /* 16:9 ratio */
+      background: #0a0f1d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 3.5vw 4.5vw 4vw 4.5vw;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Slide Header */
+    .slide-tag {
+      font-size: 0.85vw;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 0.5vw;
+      margin-bottom: 0.4vw;
+    }
+    .slide-tag span.badge {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.15vw 0.5vw;
+      border-radius: 4px;
+      font-size: 0.75vw;
+    }
+    .slide-title {
+      font-size: 2.3vw;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 0.4vw;
+    }
+    .slide-subtitle {
+      font-size: 1.1vw;
+      color: #94a3b8;
+      margin-bottom: 2vw;
+      font-weight: 400;
+    }
+
+    /* Slide Content Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 2vw;
+      flex: 1;
+      min-height: 0;
+    }
+    .grid-2-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2vw;
+      flex: 1;
+      min-height: 0;
+    }
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1.5vw;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Cards */
+    .card {
+      background: #11182b;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 1.4vw 1.6vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+    .card.red::before { background: #f43f5e; }
+    .card.amber::before { background: #f59e0b; }
+    .card.sky::before { background: #38bdf8; }
+    .card.emerald::before { background: #10b981; }
+
+    .card-label {
+      font-size: 0.8vw;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.4vw;
+    }
+    .card.red .card-label { color: #fb7185; }
+    .card.amber .card-label { color: #fbbf24; }
+    .card.sky .card-label { color: #38bdf8; }
+    .card.emerald .card-label { color: #34d399; }
+
+    .card-title {
+      font-size: 1.15vw;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.4vw;
+    }
+    .card-desc {
+      font-size: 0.95vw;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    /* Problem Quote Card */
+    .quote-box {
+      background: #11182b;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 2vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .quote-header {
+      font-size: 0.8vw;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .quote-text {
+      font-size: 1.35vw;
+      font-weight: 500;
+      font-style: italic;
+      color: #f1f5f9;
+      line-height: 1.5;
+      margin: 1.5vw 0;
+    }
+    .impact-list {
+      border-top: 1px solid #1e293b;
+      padding-top: 1.2vw;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6vw;
+    }
+    .impact-item {
+      font-size: 0.95vw;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 0.6vw;
+    }
+    .impact-item span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+    }
+
+    /* Diagram Image Container */
+    .image-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .image-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .image-card img.contain {
+      object-fit: contain;
+      background: #060b17;
+      padding: 0.4vw;
+    }
+
+    /* Controls Bar */
+    .controls {
+      position: absolute;
+      bottom: 1.2vw;
+      right: 2vw;
+      display: flex;
+      align-items: center;
+      gap: 1vw;
+      z-index: 50;
+    }
+    .page-indicator {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85vw;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .btn-nav {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 0.4vw 0.8vw;
+      font-size: 0.8vw;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4vw;
+      transition: all 0.15s ease;
+    }
+    .btn-nav:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+    .btn-fullscreen {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+    }
+    .btn-fullscreen:hover {
+      background: rgba(56, 189, 248, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container" id="deck">
+
+    <!-- SLIDE 1: PROBLEM IDENTIFICATION & INTERVIEW ORIGIN -->
+    <div class="slide active" id="slide-1">
+      <div class="slide-tag">
+        <span>Ylookup × Encode AI Hackathon</span>
+        <span class="badge">Product Track</span>
+      </div>
+      <h1 class="slide-title">The Problem: Manual "Tick-and-Tie" in Private Capital</h1>
+      <p class="slide-subtitle">100+ quarterly auditor hours lost in an error-prone, disconnected workflow</p>
+
+      <div class="grid-2">
+        <!-- 3 Problem Cards -->
+        <div style="display: flex; flex-direction: column; gap: 1vw;">
+          <div class="card red">
+            <div class="card-label">01 • Blind Cell Dependencies</div>
+            <div class="card-title">Spreadsheets Lack Document Provenance</div>
+            <div class="card-desc">Complex fund models (<code style="color:#f43f5e;font-family:'JetBrains Mono'">C4 + D5 = C6</code>) link multi-tier accounts with zero character-level audit trail back to original bank PDFs.</div>
+          </div>
+          <div class="card amber">
+            <div class="card-label">02 • Manual Transposition Risks</div>
+            <div class="card-title">Typing Figures from 50-Page Bank Statements</div>
+            <div class="card-desc">Auditors manually re-enter numbers across dozens of accounts. A single transposed digit triggers days of reconcile fire drills.</div>
+          </div>
+          <div class="card sky">
+            <div class="card-label">03 • Hidden Audit Exceptions</div>
+            <div class="card-title">Buried Suspense Reserves & Intercompany Washes</div>
+            <div class="card-desc">Unallocated deposits and clearing variances slip through unnoticed until year-end auditor sign-off.</div>
+          </div>
+        </div>
+
+        <!-- Right: Quote Box -->
+        <div class="quote-box">
+          <div>
+            <div class="quote-header">Origin from Fund Manager Interviews</div>
+            <div class="quote-text">
+              “Auditors spend up to 70% of quarterly reporting just squinting between Excel and PDFs to verify that cash matches bank statements. It is slow, manual, and totally disconnected.”
+            </div>
+          </div>
+          <div class="impact-list">
+            <div class="impact-item"><span class="dot"></span> 2–4 weeks delay on quarterly NAV issuance</div>
+            <div class="impact-item"><span class="dot"></span> Excessive fee leakage on manual accounting hours</div>
+            <div class="impact-item"><span class="dot"></span> Strict regulatory pressure for zero-hallucination verification</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: THE SOLUTION (X-RAY AUDIT COPILOT) -->
+    <div class="slide" id="slide-2">
+      <div class="slide-tag">
+        <span>Autonomous Verification</span>
+        <span class="badge">Product Solution</span>
+      </div>
+      <h1 class="slide-title">The Solution: X-Ray Audit Copilot</h1>
+      <p class="slide-subtitle">Dual-engine financial lineage & sub-millimeter character-grounded PDF statement tie-out</p>
+
+      <div class="grid-2">
+        <!-- 3 Pillars -->
+        <div style="display: flex; flex-direction: column; gap: 1vw;">
+          <div class="card sky">
+            <div class="card-label">Engine 1 • Formula AST Dependency Solver</div>
+            <div class="card-title">Deconstructs Excel Math in Real-Time</div>
+            <div class="card-desc">Recursively traces arithmetic expressions (<code style="color:#38bdf8;font-family:'JetBrains Mono'">C4 + D5 = C6</code>), maps parent-child cell lineage, and links multi-sheet dependencies.</div>
+          </div>
+          <div class="card emerald">
+            <div class="card-label">Engine 2 • Automated Mathematical Footing</div>
+            <div class="card-title">Instant Zero-Variance Re-computation</div>
+            <div class="card-desc">Re-calculates vertical ledger sums and cross-fund aggregations, verifying mathematical equality with zero delta.</div>
+          </div>
+          <div class="card amber">
+            <div class="card-label">Engine 3 • Grounded PDF Statement Tie-Out</div>
+            <div class="card-title">Sub-Millimeter Coordinate Highlighting</div>
+            <div class="card-desc">Extracts exact bounding boxes (<code style="color:#f59e0b;font-family:'JetBrains Mono'">bbox</code>) from source PDF statements for 100% verified, zero-hallucination citations.</div>
+          </div>
+        </div>
+
+        <!-- Concept Image Visual -->
+        <div class="image-card">
+          <img src="assets/concept.jpg" alt="X-Ray Audit Copilot Concept Diagram">
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: SYSTEM ARCHITECTURE -->
+    <div class="slide" id="slide-3">
+      <div class="slide-tag">
+        <span>System Design</span>
+        <span class="badge">Zero-Hallucination Pipeline</span>
+      </div>
+      <h1 class="slide-title">High-Level System Architecture</h1>
+      <p class="slide-subtitle">Deterministic 4-stage pipeline connecting multi-fund sheets to source bank statements</p>
+
+      <div class="grid-2" style="grid-template-columns: 1.65fr 1fr;">
+        <!-- Architecture Diagram -->
+        <div class="image-card">
+          <img src="assets/architecture.jpg" class="contain" alt="System Architecture Flowchart">
+        </div>
+
+        <!-- Highlights Card -->
+        <div class="quote-box" style="justify-content: flex-start; gap: 1vw;">
+          <div class="quote-header">Architectural Guarantees</div>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.9vw; margin-top: 0.5vw;">
+            <div>
+              <div style="font-size: 1vw; font-weight: 700; color: #ffffff; margin-bottom: 0.2vw;">⚡ Deterministic AST Parsing</div>
+              <div style="font-size: 0.85vw; color: #94a3b8; line-height: 1.4;">Formulas parsed via Python AST; no stochastic LLM guessing on financial math.</div>
+            </div>
+            <div>
+              <div style="font-size: 1vw; font-weight: 700; color: #ffffff; margin-bottom: 0.2vw;">🎯 Sub-Millimeter BBox Localization</div>
+              <div style="font-size: 0.85vw; color: #94a3b8; line-height: 1.4;">Direct character coordinate extraction via PyMuPDF (fitz) and pdfplumber.</div>
+            </div>
+            <div>
+              <div style="font-size: 1vw; font-weight: 700; color: #ffffff; margin-bottom: 0.2vw;">🔍 Sub-50ms Reconciliation Engine</div>
+              <div style="font-size: 0.85vw; color: #94a3b8; line-height: 1.4;">Computes footing, tie-out variance, and multi-sheet intercompany clearing in real time.</div>
+            </div>
+            <div>
+              <div style="font-size: 1vw; font-weight: 700; color: #ffffff; margin-bottom: 0.2vw;">🚨 Automated Suspense Flagging</div>
+              <div style="font-size: 0.85vw; color: #94a3b8; line-height: 1.4;">Detects unallocated deposits (e.g. €45,200) and displays auditor review badges.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: TECHNOLOGY STACK & DEPLOYMENT -->
+    <div class="slide" id="slide-4">
+      <div class="slide-tag">
+        <span>Engineering & Delivery</span>
+        <span class="badge">Production Ready</span>
+      </div>
+      <h1 class="slide-title">Technology Stack & Turnkey Delivery</h1>
+      <p class="slide-subtitle">Modern, decoupled, enterprise-grade architecture with single-command Docker deployment</p>
+
+      <div class="grid-2x2">
+        <div class="card sky">
+          <div class="card-label">Backend Engine</div>
+          <div class="card-title">FastAPI & Python 3.11</div>
+          <div class="card-desc">Asynchronous REST API, Pydantic type safety, formula AST dependency solver, and sub-50ms latency for real-time audit reconciliation.</div>
+        </div>
+        <div class="card emerald">
+          <div class="card-label">PDF & OCR Extraction</div>
+          <div class="card-title">PyMuPDF & pdfplumber</div>
+          <div class="card-desc">Sub-millimeter character coordinate extraction, bounding box polygon geometry, and verbatim text citation without AI hallucinations.</div>
+        </div>
+        <div class="card sky">
+          <div class="card-label">Auditor Frontend</div>
+          <div class="card-title">Next.js 14 & FortuneSheet</div>
+          <div class="card-desc">React 18 App Router, Tailwind CSS, high-performance virtualized canvas spreadsheet grid, and synchronized PDF.js split-viewer.</div>
+        </div>
+        <div class="card amber">
+          <div class="card-label">Turnkey Docker</div>
+          <div class="card-title">Single-Command ./run_docker.sh</div>
+          <div class="card-desc">Zero-config containerization spinning up frontend, backend, and healthchecks in isolated containers for instant judging evaluation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="controls">
+      <span class="page-indicator" id="indicator">1 / 4</span>
+      <button class="btn-nav" id="prev-btn" onclick="prevSlide()">‹ Prev</button>
+      <button class="btn-nav" id="next-btn" onclick="nextSlide()">Next ›</button>
+      <button class="btn-nav btn-fullscreen" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 4;
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      document.querySelectorAll('.slide').forEach((slide, idx) => {
+        if (idx + 1 === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      document.getElementById('indicator').textContent = `${currentSlide} / ${totalSlides}`;
+      document.getElementById('prev-btn').style.opacity = currentSlide === 1 ? '0.4' : '1';
+      document.getElementById('next-btn').style.opacity = currentSlide === totalSlides ? '0.4' : '1';
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      }
+    });
+
+    showSlide(1);
+  </script>
+</body>
+</html>
