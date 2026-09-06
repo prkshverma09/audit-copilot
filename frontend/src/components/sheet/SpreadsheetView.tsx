@@ -66,19 +66,30 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
   const tieOutDecorationsRef = useRef(tieOutDecorations);
   tieOutDecorationsRef.current = tieOutDecorations;
 
+  const primarySheetId = sheetData?.[0]?.id || '';
+  const primarySheetIdRef = useRef(primarySheetId);
+  primarySheetIdRef.current = primarySheetId;
+
+  const activeSheetIdRef = useRef(primarySheetId);
+
   // Stable hooks object to avoid re-mounting Workbook during Immer context updates
   const hooks = useMemo(() => {
     return {
       afterSelectionChange: (
-        _sheetId: string,
+        sheetId: string,
         selection: any
       ) => {
+        if (sheetId) {
+          activeSheetIdRef.current = sheetId;
+        }
         if (!selection) return;
         const r = typeof selection.row_focus === 'number' ? selection.row_focus : selection.row?.[0];
         const c = typeof selection.column_focus === 'number' ? selection.column_focus : selection.column?.[0];
         if (typeof r === 'number' && typeof c === 'number') {
           const cellId = coordsToCellId(r, c);
-          onSelectAuditCellRef.current?.(cellId);
+          if (!activeSheetIdRef.current || activeSheetIdRef.current === primarySheetIdRef.current) {
+            onSelectAuditCellRef.current?.(cellId);
+          }
         }
       },
       afterRenderCell: (
@@ -93,6 +104,11 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
         },
         ctx: CanvasRenderingContext2D
       ) => {
+        // Only draw audit badges and tie-out decorations on the primary reconciliation workpaper sheet
+        if (activeSheetIdRef.current && activeSheetIdRef.current !== primarySheetIdRef.current) {
+          return;
+        }
+
         const cellId = coordsToCellId(cellInfo.row, cellInfo.column);
         const cellLineage = lineageCellMapRef.current[cellId];
         const cellTieOut = tieOutDecorationsRef.current[cellId];
