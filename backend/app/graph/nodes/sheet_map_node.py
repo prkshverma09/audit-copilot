@@ -42,7 +42,7 @@ def _get_dynamic_sheets_for_state(state: GraphState) -> List[Dict[str, Any]]:
             if os.path.exists(fpath):
                 try:
                     with open(fpath, "rb") as f:
-                        parsed_docs.append(extract_transactions_from_pdf(f.read(), df, "doc_" + df[:10]))
+                        parsed_docs.append(extract_transactions_from_pdf(f.read(), df))
                 except Exception as e:
                     logger.warning(f"Error reading demo statement {df}: {e}")
 

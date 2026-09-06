@@ -124,9 +124,9 @@ export default function AuditCopilotPage() {
     }
   };
 
-  // Target PDF URL & Page (resolved through API streaming endpoint)
+  // Target PDF URL & Page (resolved through API streaming endpoint or local static assets)
   const pdfUrl = activeDocument
-    ? api.getDocumentUrl(activeDocument.doc_id, activeDocument.url)
+    ? (activeDocument.url || api.getDocumentUrl(activeDocument.doc_id, activeDocument.url))
     : '';
   const targetPage = activeInput?.page_number || 1;
   const verbatimQuote = activeInput?.verbatim_quote || '';

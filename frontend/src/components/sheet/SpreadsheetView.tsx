@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { SheetLineageResponse } from '@/types/lineage';
 import { Loader2 } from 'lucide-react';
@@ -23,7 +23,7 @@ interface SpreadsheetViewProps {
   sheetData: any[];
   lineageData?: SheetLineageResponse;
   selectedCellId: string;
-  onSelectAuditCell: (cellId: string) => void;
+  onSelectAuditCell: (cellId: string, auditMeta?: any) => void;
   onChange?: (data: any[]) => void;
   tieOutReport?: any;
 }
@@ -71,27 +71,113 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
   primarySheetIdRef.current = primarySheetId;
 
   const activeSheetIdRef = useRef(primarySheetId);
+  const sheetDataRef = useRef(sheetData);
+  sheetDataRef.current = sheetData;
+
+  const getCurrentActiveSheetId = useCallback(() => {
+    if (typeof document !== 'undefined') {
+      const activeTabEl = document.querySelector('.luckysheet-sheets-item-active');
+      if (activeTabEl) {
+        const text = activeTabEl.textContent?.trim() || '';
+        const found = sheetDataRef.current?.find(
+          s => text.includes(s.name) || s.name.includes(text)
+        );
+        if (found) {
+          activeSheetIdRef.current = found.id;
+          return found.id;
+        }
+      }
+    }
+    return activeSheetIdRef.current || primarySheetIdRef.current;
+  }, []);
+
+  // Seamlessly synchronize activeSheetId whenever user clicks any bottom sheet tab
+  React.useEffect(() => {
+    const handleSheetTabClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement)?.closest?.('.luckysheet-sheets-item');
+      if (target) {
+        const tabText = target.textContent?.trim() || '';
+        const matchingSheet = sheetDataRef.current?.find(
+          s => tabText.includes(s.name) || s.name.includes(tabText)
+        );
+        if (matchingSheet) {
+          activeSheetIdRef.current = matchingSheet.id;
+        }
+      }
+    };
+    document.addEventListener('click', handleSheetTabClick, true);
+    return () => document.removeEventListener('click', handleSheetTabClick, true);
+  }, []);
 
   // Stable hooks object to avoid re-mounting Workbook during Immer context updates
   const hooks = useMemo(() => {
+    const processSelection = (r: number, c: number, cellDirect?: any) => {
+      const cellId = coordsToCellId(r, c);
+      const currentActiveId = getCurrentActiveSheetId();
+      if (!currentActiveId || currentActiveId === primarySheetIdRef.current) {
+        onSelectAuditCellRef.current?.(cellId);
+      } else {
+        // Non-primary sheet (Staging Sheet or DIU): extract transaction audit metadata
+        const curSheet = sheetDataRef.current?.find(s => s.id === currentActiveId);
+        let audit = cellDirect?.audit || cellDirect?.v?.audit;
+        
+        // 1. Check in 2D array data[r][c] (standard FortuneSheet runtime format)
+        if (!audit && curSheet?.data?.[r]?.[c]) {
+          const cellObj = curSheet.data[r][c];
+          audit = cellObj?.audit || cellObj?.v?.audit;
+        }
+        // 2. Check in celldata format (initial format before Workbook mounts)
+        if (!audit && curSheet?.celldata) {
+          const cellInSheet = curSheet.celldata.find((cd: any) => cd.r === r && cd.c === c);
+          audit = cellInSheet?.v?.audit || cellInSheet?.audit;
+        }
+        // 3. If clicking any column in row r, resolve the audit from anywhere in that row
+        if (!audit && r > 0) {
+          if (curSheet?.data?.[r]) {
+            const rowCell = curSheet.data[r].find((cell: any) => cell?.audit || cell?.v?.audit);
+            audit = rowCell?.audit || rowCell?.v?.audit;
+          }
+          if (!audit && curSheet?.celldata) {
+            const rowCell = curSheet.celldata.find((cd: any) => cd.r === r && (cd?.v?.audit || cd?.audit));
+            audit = rowCell?.v?.audit || rowCell?.audit;
+          }
+        }
+        console.log('>>> [processSelection]', { r, c, cellId, activeSheet: currentActiveId, hasAudit: !!audit, curSheet: curSheet?.name });
+        onSelectAuditCellRef.current?.(cellId, audit);
+      }
+    };
+
     return {
+      afterActivateSheet: (id: string) => {
+        if (id) {
+          activeSheetIdRef.current = id;
+        }
+      },
+      afterCellMouseDown: (
+        cell: any,
+        cellInfo: { row: number; column: number }
+      ) => {
+        if (!cellInfo) return;
+        const { row, column } = cellInfo;
+        if (typeof row === 'number' && typeof column === 'number') {
+          processSelection(row, column, cell);
+        }
+      },
       afterSelectionChange: (
         sheetId: string,
         selection: any
       ) => {
-        if (sheetId) {
+        if (sheetId && typeof sheetId === 'string') {
           activeSheetIdRef.current = sheetId;
         }
         if (!selection) return;
         const r = typeof selection.row_focus === 'number' ? selection.row_focus : selection.row?.[0];
         const c = typeof selection.column_focus === 'number' ? selection.column_focus : selection.column?.[0];
         if (typeof r === 'number' && typeof c === 'number') {
-          const cellId = coordsToCellId(r, c);
-          if (!activeSheetIdRef.current || activeSheetIdRef.current === primarySheetIdRef.current) {
-            onSelectAuditCellRef.current?.(cellId);
-          }
+          processSelection(r, c);
         }
       },
+
       afterRenderCell: (
         _cell: any,
         cellInfo: {
@@ -105,7 +191,8 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
         ctx: CanvasRenderingContext2D
       ) => {
         // Only draw audit badges and tie-out decorations on the primary reconciliation workpaper sheet
-        if (activeSheetIdRef.current && activeSheetIdRef.current !== primarySheetIdRef.current) {
+        const currentActiveId = getCurrentActiveSheetId();
+        if (currentActiveId && currentActiveId !== primarySheetIdRef.current) {
           return;
         }
 

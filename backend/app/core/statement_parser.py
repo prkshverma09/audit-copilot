@@ -23,14 +23,26 @@ PROJECT_CODES = [
 ]
 
 
+def resolve_clean_doc_id(filename: str, doc_id: Optional[str] = None) -> str:
+    """Ensure a concise and consistent doc_id matching frontend and storage references."""
+    if doc_id and doc_id not in ["doc_", "doc_default", ""]:
+        return doc_id
+    fn = filename.lower()
+    for code in ["0894", "8102", "0541", "4319", "030041", "3252", "4373"]:
+        if code in fn:
+            return f"doc_{code}"
+    return doc_id or f"doc_{filename[:12]}"
+
+
 def extract_transactions_from_pdf(
     pdf_bytes: bytes,
     filename: str,
-    doc_id: str
+    doc_id: str = "doc_default"
 ) -> Dict[str, Any]:
     """
     Extracts account header metadata and every transaction row directly from a statement PDF.
     """
+    clean_doc_id = resolve_clean_doc_id(filename, doc_id)
     reader = pypdf.PdfReader(io.BytesIO(pdf_bytes))
     num_pages = len(reader.pages)
 
@@ -116,7 +128,7 @@ def extract_transactions_from_pdf(
                     counter_transtype = "Cephalus Biogas 001 Ltd" if "CEPHALUS" in upper_narr else "Accounts Payable"
 
                 transactions.append({
-                    "doc_id": doc_id,
+                    "doc_id": clean_doc_id,
                     "filename": filename,
                     "page_number": page_idx + 1,
                     "account_name": acc_name,
@@ -139,7 +151,7 @@ def extract_transactions_from_pdf(
                 i += 1
 
     return {
-        "doc_id": doc_id,
+        "doc_id": clean_doc_id,
         "filename": filename,
         "account_name": acc_name,
         "account_number": acc_num,
@@ -219,11 +231,30 @@ def build_dynamic_staging_and_diu_sheets(
             f"{tx['filename']} (p. {tx['page_number']})",
         ]
 
+        staging_audit = {
+            "doc_id": tx["doc_id"],
+            "filename": tx["filename"],
+            "page_number": tx["page_number"],
+            "verbatim_quote": f"{tx['bank_reference']}\n{abs(amt):,.2f}\n{tx['narrative']}",
+            "metric_name": f"{tx['account_name']}: {tx['bank_reference']}",
+            "extracted_value": amt,
+            "amount": amt,
+            "account_name": tx["account_name"],
+            "account_number": tx["account_number"],
+            "currency": tx["currency"],
+            "bank_reference": tx["bank_reference"],
+            "narrative": tx["narrative"],
+            "date": tx["date"],
+            "formula_display": f"{tx['filename']} (p. {tx['page_number']})",
+            "status": "verified",
+        }
+
         for col_idx, val in enumerate(row_vals):
             cell_obj: Dict[str, Any] = {
                 "fc": "#0F172A",
                 "fs": 10,
                 "bg": bg,
+                "audit": staging_audit,
             }
             if isinstance(val, (int, float)):
                 cell_obj.update({
@@ -311,8 +342,30 @@ def build_dynamic_staging_and_diu_sheets(
             tx["bank_reference"],
         ]
 
+        leg_1_audit = {
+            "doc_id": tx["doc_id"],
+            "filename": tx["filename"],
+            "page_number": tx["page_number"],
+            "verbatim_quote": f"{tx['bank_reference']}\n{abs(tx['amount']):,.2f}\n{tx['narrative']}",
+            "metric_name": f"{tx['matched_legal_entity']} ({tx['cash_transtype']}): {tx['bank_reference']}",
+            "extracted_value": debit_1 if debit_1 > 0 else credit_1,
+            "amount": debit_1 if debit_1 > 0 else credit_1,
+            "account_name": tx["account_name"],
+            "bank_reference": tx["bank_reference"],
+            "narrative": tx["narrative"],
+            "currency": tx["currency"],
+            "date": date_str,
+            "formula_display": f"Cash Leg tied to {tx['filename']} (p. {tx['page_number']})",
+            "status": "verified",
+        }
+
         for col_idx, val in enumerate(leg_1_vals):
-            cell_obj: Dict[str, Any] = {"fc": "#0F172A", "fs": 10, "bg": bg_1}
+            cell_obj: Dict[str, Any] = {
+                "fc": "#0F172A",
+                "fs": 10,
+                "bg": bg_1,
+                "audit": leg_1_audit,
+            }
             if isinstance(val, (int, float)):
                 cell_obj.update({
                     "v": val,
@@ -344,8 +397,30 @@ def build_dynamic_staging_and_diu_sheets(
             tx["bank_reference"],
         ]
 
+        leg_2_audit = {
+            "doc_id": tx["doc_id"],
+            "filename": tx["filename"],
+            "page_number": tx["page_number"],
+            "verbatim_quote": f"{tx['bank_reference']}\n{abs(tx['amount']):,.2f}\n{tx['narrative']}",
+            "metric_name": f"{tx['matched_legal_entity']} ({tx['counterparty_transtype']}): {tx['bank_reference']}",
+            "extracted_value": debit_2 if debit_2 > 0 else credit_2,
+            "amount": debit_2 if debit_2 > 0 else credit_2,
+            "account_name": tx["account_name"],
+            "bank_reference": tx["bank_reference"],
+            "narrative": tx["narrative"],
+            "currency": tx["currency"],
+            "date": date_str,
+            "formula_display": f"Offset Leg tied to {tx['filename']} (p. {tx['page_number']})",
+            "status": "verified",
+        }
+
         for col_idx, val in enumerate(leg_2_vals):
-            cell_obj = {"fc": "#0F172A", "fs": 10, "bg": bg_2}
+            cell_obj = {
+                "fc": "#0F172A",
+                "fs": 10,
+                "bg": bg_2,
+                "audit": leg_2_audit,
+            }
             if isinstance(val, (int, float)):
                 cell_obj.update({
                     "v": val,
