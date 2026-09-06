@@ -158,14 +158,14 @@ def create_deck():
     # ==========================================
     s2 = prs.slides.add_slide(blank_layout)
     set_slide_background(s2)
-    add_header(s2, "Autonomous Lineage | Product Solution",
+    add_header(s2, "Gemini 2.5 Multimodal AI | Product Solution",
                "The Solution: X-Ray Audit Copilot",
-               "Dual-engine financial lineage & sub-millimeter character-grounded statement matching")
+               "Gemini-powered financial lineage & sub-millimeter character-grounded statement matching")
     
     p_data = [
-        ("Engine 1 • Formula Dependency Solver", "Recursively traces arithmetic formulas (C4 + D5 = C6) and maps parent-child cell lineage automatically.", C_SKY),
-        ("Engine 2 • Automated Math Verification", "Recalculates vertical ledger sums and cross-fund balances with zero delta tolerance.", C_EMERALD),
-        ("Engine 3 • Grounded Statement Matching", "Extracts exact bounding boxes (bbox) from PDF statements for 100% verified citations.", C_AMBER)
+        ("Engine 1 • Gemini 2.5 Multimodal Lineage", "Google Gemini multimodal understanding extracts statement metadata, accounts, and verbatim citation quotes into structured JSON.", C_SKY),
+        ("Engine 2 • Automated Math Verification", "Python AST engine recalculates vertical ledger sums (C4 + D5 = C6) and cross-fund balances with zero delta.", C_EMERALD),
+        ("Engine 3 • Grounded Statement Matching", "Extracts exact bounding boxes (bbox) from PDF statements for 100% verified, non-hallucinatory citations.", C_AMBER)
     ]
     
     for i, (head, desc, color) in enumerate(p_data):
@@ -227,9 +227,9 @@ def create_deck():
     ap0.space_after = Pt(12)
     
     highlights = [
-        ("Deterministic AST", "Formulas parsed via Python AST; zero LLM math guessing."),
+        ("Gemini 2.5 Flash & Pro", "Flash for rapid PDF classification; Pro for multimodal financial extraction."),
         ("Sub-Millimeter BBox", "Direct character coordinate extraction via PyMuPDF and pdfplumber."),
-        ("Sub-50ms Engine", "Instant cross-fund balance matching & delta computation."),
+        ("Deterministic AST Math", "Python AST formula evaluation; zero LLM math guessing or hallucination."),
         ("Suspense Alerting", "Detects unallocated deposits (e.g. €45,200) with review badges.")
     ]
     
@@ -256,10 +256,10 @@ def create_deck():
                "Modern, decoupled architecture with single-command Docker deployment")
     
     tech_cards = [
-        ("FASTAPI & PYTHON 3.11", "Asynchronous REST API, typed models, formula AST dependency solver, and sub-50ms response latency.", C_SKY),
-        ("PYMUPDF & PDFPLUMBER", "Sub-millimeter character coordinate extraction, bounding box geometry, and zero hallucinations.", C_EMERALD),
+        ("GOOGLE GEMINI 2.5 (FLASH & PRO)", "Official google-genai SDK. Flash for fast PDF classification; Pro for structured financial entity & quote extraction.", C_SKY),
+        ("FASTAPI & PYTHON 3.11", "Asynchronous REST API, formula AST dependency solver, PyMuPDF coordinate geometry, sub-50ms latency.", C_EMERALD),
         ("NEXT.JS 14 & FORTUNESHEET", "React 18 App Router, Tailwind CSS, virtualized spreadsheet canvas, and synchronized PDF.js split-viewer.", C_SKY),
-        ("TURNKEY DOCKER", "Single-command containerization (./run_docker.sh) running frontend, backend, and healthchecks for instant judge evaluation.", C_AMBER)
+        ("TURNKEY DOCKER", "Single-command containerization (./run_docker.sh) running full stack with optional GEMINI_API_KEY or offline heuristic fallback.", C_AMBER)
     ]
     
     grid_coords = [
