@@ -3,8 +3,6 @@
 import React from 'react';
 import {
   Upload,
-  CheckCircle2,
-  AlertTriangle,
   Sparkles,
   Calculator,
 } from 'lucide-react';
@@ -58,42 +56,12 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Center: Audit Confidence Meter & Tie-Out Engine */}
+      {/* Center: Interactive Automated Reconciliation Badge */}
       <div className="flex items-center space-x-3">
-        {/* Audit Confidence Pill */}
-        {coverageStats.totalCells > 0 ? (
-          <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg text-xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-            <span className="text-emerald-300 font-semibold">Lineage Coverage:</span>
-            <span className="text-emerald-400 font-bold font-mono">
-              {coverageStats.coveragePercent}%
-            </span>
-            <span className="text-slate-500">|</span>
-            <span className="text-slate-400">
-              {coverageStats.verifiedCells}/{coverageStats.totalCells} Traced
-            </span>
-            {coverageStats.reviewRequired > 0 && (
-              <>
-                <span className="text-slate-500">|</span>
-                <span className="text-amber-400 font-medium flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
-                  {coverageStats.reviewRequired} Review
-                </span>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center space-x-2 bg-slate-800/40 border border-audit-border px-3 py-1 rounded-lg text-xs text-slate-400">
-            <Sparkles className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-            <span>Ready for Audit Ingestion</span>
-          </div>
-        )}
-
-        {/* Automated Reconciliation Engine Button */}
-        {onOpenTieOutModal && tieOutReport && (
+        {onOpenTieOutModal && tieOutReport ? (
           <button
             onClick={onOpenTieOutModal}
-            className={`flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer shadow-sm ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer shadow-sm ${
               (tieOutReport?.total_unexplained_delta ?? 0) === 0
                 ? 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-300'
                 : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-300'
@@ -105,6 +73,11 @@ export const Header: React.FC<HeaderProps> = ({
               Reconciled: {tieOutReport?.passed_bridges ?? 3}/{tieOutReport?.total_bridges ?? 4}
             </span>
           </button>
+        ) : (
+          <div className="flex items-center space-x-2 bg-slate-800/40 border border-audit-border px-3 py-1.5 rounded-lg text-xs text-slate-400">
+            <Sparkles className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <span>Ready for Audit Ingestion</span>
+          </div>
         )}
       </div>
 
