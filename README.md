@@ -5,6 +5,19 @@
 
 ---
 
+<div align="center">
+
+## 🎥 [Watch 3-Minute Demo Video (YouTube)](https://youtu.be/pwfN563SwTw)
+### 👉 **https://youtu.be/pwfN563SwTw** 👈
+
+[![X-Ray Audit Copilot Demo Video](https://img.youtube.com/vi/pwfN563SwTw/maxresdefault.jpg)](https://youtu.be/pwfN563SwTw)
+
+*Walkthrough covers interview problem origin, live multi-fund ingestion, formula AST verification, click-to-source PDF lineage, and suspense exception handling.*
+
+</div>
+
+---
+
 ## ⚡ 1. Quick Start
 
 Clone the repository:
