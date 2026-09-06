@@ -1,134 +1,99 @@
 # X-Ray Audit Copilot 🔍
-### Autonomous Financial Data Lineage, Automated Multi-Fund Reconciliation & Character-Grounded Audit Trail
+### Autonomous Financial Data Lineage, Automated Multi-Fund Reconciliation & Character-Grounded PDF Audit Trail
 > **Ylookup × Encode AI Hackathon — Product Track**  
-> *Bringing software engineering & zero-hallucination verification to the $30T private markets industry.*
+> *Transforming the painful 7-turn fund administration review loop into an instant, verifiable, zero-hallucination audit.*
 
 ---
 
-## ⚡ Quick Start (One Command to Run)
+## ⚡ 1. Run in One Command
 
-Clone the repository:
+Clone the repository and launch everything with Docker:
 
 ```bash
 git clone https://github.com/prkshverma09/audit-copilot.git
 cd audit-copilot
-```
-
-### Option A: Turnkey Docker Deployment (Recommended for Judges 🐳)
-Run everything in isolated containers with zero dependency setup:
-
-```bash
 ./run_docker.sh
-# or
-docker compose up --build
 ```
 
-### Option B: Local Native Deployment (Without Docker)
-```bash
-./start_all.sh
-```
+*(Alternatively, if you prefer running without Docker: `./start_all.sh`)*
 
-- **Frontend Application:** [http://localhost:3000](http://localhost:3000)
-- **Backend FastAPI API:** [http://localhost:8000](http://localhost:8000)
-- **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+Once started, open your browser:
+👉 **[http://localhost:3000](http://localhost:3000)**
 
 ---
 
-## 🎯 1. Problem Identification (25% Criteria)
+## 🧭 2. How to Test the 2 User Flows
 
-### The Real Problem from Customer Interviews
-In **Call 1: NAV Workflow Review with a Fund Manager** (`call-1-nav-workflow-review.pdf`), the Fund Manager articulated the fundamental breakdown in fund administration:
-
-> *"The real problem is that it took **six or seven turns** to get there. That is the problem I am trying to solve. Nothing is ever right first time... And I cannot trust any number I get from them, so I have to check everything, which adds its own iteration."*
->
-> *"And then there is a quality control gap where **nobody reads it and asks whether this number foots to that number**. How does my balance sheet have nothing in common with my equity balance? In reality you could build a bridge between the two."*
->
-> *"Frankly I no longer read what they send. I put it through an AI coding tool first, and it produced a forty-point memo of what was wrong."*
-
-### Why the Status Quo Fails
-1. **The "Opaque Spreadsheet" Problem**: Fund admins send Excel spreadsheets with static values. The fund manager has no idea where numbers came from without digging through dozens of 50-page PDF bank statements.
-2. **The "Broken Math" Problem**: Nobody verifies vertical footings or cross-fund intercompany settlements before sending drafts, forcing the fund manager to act as a manual QA auditor.
-3. **The "Hallucination Risk"**: Generic LLMs hallucinate financial balances. Fund accountants cannot trust AI outputs without verifiable evidence citations.
-
-*For our full analysis, see [CALL_TRANSCRIPT_ALIGNMENT.md](CALL_TRANSCRIPT_ALIGNMENT.md).*
+### Flow A: Load Demo Audit (Instant 1-Click Verification)
+1. On the home screen (or top header), click the amber button: **`Load Demo Audit`**.
+2. **What loads immediately:**
+   - A complete 4-tab fund accounting workbook on the left:
+     - **`Fund Cash Reconciliation`**: Primary cross-fund consolidation matrix.
+     - **`Staging Sheet`**: Transaction-level detail across funds.
+     - **`DIU (Journal Entries)`**: Balanced debit & credit accounting legs.
+     - **`Chart of Accounts`**: Master fund accounting taxonomy.
+   - The PDF statement viewer on the right.
 
 ---
 
-## 🚀 2. The Solution: What We Built (25% Criteria)
-
-**X-Ray Audit Copilot** collapses the painful "6-to-7 turn" review loop into a **verifiable, single-turn audit process**:
-
-1. **Live Character-Grounded Lineage**: Clicking any cell in the `@fortune-sheet/react` workbook instantly splits the screen, loads the exact statement PDF, jumps to the exact page, and highlights the verbatim quote in glowing yellow.
-2. **Automated Multi-Fund Reconciliation Engine**: Builds mathematical verification bridges across funds (e.g., verifying that Fund I cash + Fund II cash = Consolidated cash, and intercompany transfers net to `€0.00`).
-3. **Automated Exception Detection**: Flags unallocated items (like `SUSPENSE-Q1` €45,200.00) with `⚠️ Review Required` and generates audit commentary explaining the variance.
-4. **Dynamic Statement Ingestion to Multi-Tab Workpaper**: Uploading raw PDF statements automatically synthesizes:
-   - **`Fund Cash Reconciliation`**: Primary cross-fund matrix and consolidation balance.
-   - **`Staging Sheet`**: Transaction-level detail dynamically parsed from all uploaded statements.
-   - **`DIU (Journal Entries)`**: Balanced double-entry accounting legs tied to the chart of accounts.
-   - **`Chart of Accounts`**: Master fund accounting taxonomy.
+### Flow B: Upload Statements & Run Audit
+1. Click **`Upload Statements & Run Audit`** (or **`Upload PDFs`** in the top navigation).
+2. Drag & drop (or select) any PDF bank statements from the repository:  
+   📂 `Ylookup Hackathon Datasets/01-bank-statements-to-journal-entries/statements/`  
+   *(e.g., select `20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf` and `20260331_NI_A_B__FUND_II_CALDER_EUR_8102.pdf`)*
+3. Click **`Run Audit Pipeline`**.
+4. Watch the real-time AI pipeline extract transactions, compute cross-fund reconciliations, and dynamically build the multi-tab workbook from scratch.
 
 ---
 
-## 🎨 3. UI Excellence & User Experience (25% Criteria)
+## ✅ 3. How to Validate That the Audit Is Working
 
-- **Auditor-Grade Split-Pane View**: Excel workbook on the left, interactive PDF document viewer on the right with resizable split-pane.
-- **Formula & Lineage Ribbon**: Displays the active cell, account description, calculation status (`✓ Fully Reconciled` or `⚠️ Review Required`), and instant deep links.
-- **Reconciliation Engine Modal**: Executive scorecard displaying mathematical equations, component terms, source documents, and zero-variance compliance.
-- **Interactive Canvas Overlays**: Custom Canvas rendering draws visual audit indicators directly onto sheet cells without interfering with standard spreadsheet navigation.
-- **Zero AI Slop**: Clean, high-density dark-mode interface designed for finance professionals.
+Once data is loaded in the sheet, test these 3 key verification features:
 
----
+### 1. Click a Cell to Verify Live PDF Citation (Zero Hallucination)
+- On the **`Fund Cash Reconciliation`** tab, click on cell **`C4`** (`€13,217,773.59`).
+- **Look at the right panel:** The viewer automatically loads `20260331_NI_ABF_I_SCSP_CALDER_EUR_0894.pdf`, navigates to **Page 1**, and **highlights the closing ledger balance in yellow**.
+- Click cell **`D5`** (`€20,088.32`): It automatically switches to the Fund II statement PDF and highlights its balance on Page 1.
+- Switch to the **`Staging Sheet`** tab or **`DIU (Journal Entries)`** tab and click any transaction row: it immediately navigates to and highlights that specific transaction inside the statement PDF.
 
-## 🏗️ 4. Architecture & Code Quality (25% Criteria)
+### 2. Inspect the Automated Reconciliation Engine ("The Bridges")
+- Select cell **`C6`** (Consolidated Cash Balance).
+- In the top formula banner, click **`Inspect Reconciliation`** (or click the **`Reconciled: 3/4`** badge in the header).
+- **The Reconciliation Modal opens and verifies:**
+  - **Bridge 1 (Consolidation)**: `Fund I (€13.2M) + Fund II (€20k) = €13.26M` with **`€0.00 (Reconciled)`** delta.
+  - **Bridge 2 (Intercompany Clearing)**: Fund I's `-€1.62` transfer is cleared by Fund II's two tranches (`€0.85 + €0.77`), verifying net-zero settlement.
+  - **Bridge 3 (Vertical Footing)**: Opening balance (`€0.00`) + verified receipts = ending balance.
 
-```mermaid
-flowchart LR
-    PDFs["Statement PDFs<br/>(EUR, USD, GBP, DKK)"] --> Parser["statement_parser.py<br/>(pdfplumber / regex)"]
-    PDFs --> LangGraph["LangGraph Workflow<br/>(Gemini 2.5 Lineage Engine)"]
-    
-    Parser --> Sheets["Dynamic Staging &<br/>DIU Journal Sheets"]
-    LangGraph --> Lineage["Character-Grounded<br/>Lineage Graph"]
-    
-    Lineage --> TieOut["Tie-Out & Footing Engine<br/>(Mathematical Bridges)"]
-    
-    Sheets --> Workbook["@fortune-sheet/react<br/>Multi-Tab Workbook"]
-    Lineage --> Workbook
-    TieOut --> Workbook
-    
-    Workbook --> UI["Next.js Split-Screen UI<br/>(Synchronized PDF Citations)"]
-```
-
-### Key Components
-- **Backend (`/backend`)**:
-  - `app/graph/workflow.py`: Multi-stage LangGraph pipeline for document classification, lineage extraction, and reconciliation.
-  - `app/core/statement_parser.py`: Robust PDF statement parser extracting transaction dates, amounts, narratives, and journal entry legs.
-  - `app/core/tieout_engine.py`: Deterministic accounting engine evaluating consolidation bridges, footing deltas, and zero-variance compliance.
-  - `app/api/v1/`: Modular FastAPI endpoints for documents, lineage, spreadsheet models, and tie-out verification.
-- **Frontend (`/frontend`)**:
-  - `src/components/sheet/SpreadsheetView.tsx`: FortuneSheet grid integration with custom canvas-layer audit decorators.
-  - `src/components/sheet/TieOutBridgeModal.tsx`: Interactive reconciliation inspector.
-  - `src/components/viewer/PdfViewer.tsx`: High-performance PDF renderer with automated keyword highlighting and bounding-box synchronization.
-  - `src/components/layout/Header.tsx`: Executive scorecard with real-time audit confidence meter.
+### 3. Check Audit Exception Quarantine
+- In the modal (or on the sheet at row 13), look at cell **`C14`**:
+- It is flagged with **`⚠️ Review Required`** because `€45,200.00` was booked in the ledger under `SUSPENSE-Q1`, but **no corresponding transaction appeared on the bank statement**.
+- The copilot autonomously quarantined the unallocated wire and generated an auditor memo explaining why it needs investigation.
 
 ---
 
-## 🧪 Verification & Test Suite
+## 🎯 4. The Problem This Solves (Customer Interview Grounding)
 
-The repository includes end-to-end test suites verifying both the backend API and frontend interactive audit trail:
+In **Call 1: NAV Workflow Review with a Fund Manager** (`call-1-nav-workflow-review.pdf`), the fund manager explained that quarterly reporting takes **6 to 7 back-and-forth turns** with administrators because:
+1. Managers cannot trust numbers without manually hunting through dozens of PDF statements.
+2. Nobody checks whether numbers foot or balance before sending spreadsheets.
+
+**X-Ray Audit Copilot** solves this by providing:
+- **Instant proof of origin:** Every cell is linked to a character-grounded PDF highlight.
+- **Automated mathematical bridges:** Verifying consolidation sums and intercompany settlements.
+- **Automated discrepancy flags:** Highlighting unverified suspense items before they reach the client.
+
+*(For full transcript analysis, see [CALL_TRANSCRIPT_ALIGNMENT.md](CALL_TRANSCRIPT_ALIGNMENT.md))*
+
+---
+
+## 🧪 Automated Test Suite (Optional)
+
+Run our automated verification suites directly from your terminal:
 
 ```bash
-# 1. Run live backend verification on real hackathon dataset statements
+# Test all backend APIs against real hackathon statement PDFs
 ./backend/.venv/bin/python backend/tests/test_all_apis_real_data.py
 
-# 2. Run Playwright interactive audit trail verification
+# Run headless browser interactive audit trail test (Playwright)
 node frontend/scripts/test_interactive_audit_trail.mjs
 ```
-
----
-
-## 👥 Submission Details
-
-- **Hackathon:** Ylookup × Encode AI Hackathon (Shoreditch, London)
-- **Track:** Product Track (Private Markets & Fund Administration)
-- **Primary Source:** Call 1 (`call-1-nav-workflow-review.pdf`)
-- **Dataset Utilized:** `01-bank-statements-to-journal-entries` (7 statement PDFs across EUR, USD, GBP, DKK)
