@@ -2,14 +2,12 @@
 
 import React, { useState } from 'react';
 import {
-  ShieldCheck,
   BookOpen,
   Quote,
   Copy,
   Check,
   Eye,
   ExternalLink,
-  CheckCircle2,
   AlertTriangle,
 } from 'lucide-react';
 import { LineageInput, AuditStatus, CellLineage } from '@/types/lineage';
@@ -109,37 +107,12 @@ export const HighlightInspector: React.FC<HighlightInspectorProps> = ({
           <span className="text-xs font-bold text-white truncate">
             {cellLineage?.metric_name || 'Evidence Citation'}
           </span>
-          {cellLineage?.formula_display && (
-            <span className="text-[11px] font-mono text-slate-400 hidden sm:inline truncate">
-              ({cellLineage.formula_display})
-            </span>
-          )}
         </div>
 
-        <div className="flex items-center space-x-2 shrink-0 text-xs">
-          {isMultiInput && (
-            <span className="text-[10px] font-medium text-slate-400">
-              {inputs.length} Sources
-            </span>
-          )}
-          <span
-            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 ${
-              isVerified
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-            }`}
-          >
-            {isVerified ? (
-              <>
-                <CheckCircle2 className="w-3 h-3" />
-                <span>Fully Reconciled</span>
-              </>
-            ) : (
-              <>
-                <AlertTriangle className="w-3 h-3" />
-                <span>Review Required</span>
-              </>
-            )}
+        <div className="flex items-center space-x-1.5 shrink-0 text-xs">
+          <BookOpen className="w-3 h-3 text-slate-500" />
+          <span className="text-[10px] font-semibold text-slate-400">
+            {inputs.length > 1 ? `${inputs.length} Evidence Sources` : '1 Evidence Source'}
           </span>
         </div>
       </div>

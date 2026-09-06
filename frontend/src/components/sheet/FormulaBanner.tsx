@@ -110,7 +110,6 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
               <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
             )}
             <span>{tieOutReport!.cell_decorations[selectedCellId].badge_label}</span>
-            <span className="text-[10px] text-sky-300 underline ml-0.5 font-bold">Inspect Reconciliation</span>
           </button>
         ) : isVerified ? (
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
