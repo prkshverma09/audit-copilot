@@ -143,7 +143,9 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
           }
         }
         console.log('>>> [processSelection]', { r, c, cellId, activeSheet: currentActiveId, hasAudit: !!audit, curSheet: curSheet?.name });
-        onSelectAuditCellRef.current?.(cellId, audit);
+        // Deep clone audit metadata to ensure no Immer proxy references leak into React state
+        const safeAudit = audit ? JSON.parse(JSON.stringify(audit)) : undefined;
+        onSelectAuditCellRef.current?.(cellId, safeAudit);
       }
     };
 
@@ -153,16 +155,11 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
           activeSheetIdRef.current = id;
         }
       },
-      afterCellMouseDown: (
-        cell: any,
-        cellInfo: { row: number; column: number }
-      ) => {
-        if (!cellInfo) return;
-        const { row, column } = cellInfo;
-        if (typeof row === 'number' && typeof column === 'number') {
-          processSelection(row, column, cell);
-        }
-      },
+      // Note: Do NOT define afterCellMouseDown!
+      // @fortune-sheet/core has an internal bug where if afterCellMouseDown is defined,
+      // it calls setTimeout accessing draft flowdata after Immer recipe finishes,
+      // throwing "TypeError: Cannot perform 'get' on a proxy that has been revoked".
+      // afterSelectionChange handles all cell selections cleanly and safely.
       afterSelectionChange: (
         sheetId: string,
         selection: any
