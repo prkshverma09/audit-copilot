@@ -77,14 +77,14 @@ def create_deck():
     s1 = prs.slides.add_slide(blank_layout)
     set_slide_background(s1)
     add_header(s1, "Ylookup x Encode AI Hackathon | Product Track", 
-               "The Problem: Manual Reconciliation in Private Capital",
-               "100+ quarterly auditor hours lost cross-referencing spreadsheets against PDF statements")
+               "The Problem: Manual Reconciliation",
+               "100+ quarterly hours lost manually checking spreadsheets against PDFs")
     
     # Left: 3 Concise Problem Cards
     cards_data = [
-        ("01 • NO DOCUMENT PROVENANCE", "Formulas like C4 + D5 = C6 reference ledger cells with zero verifiable links to source bank PDFs.", C_ROSE),
-        ("02 • HIGH-RISK MANUAL ENTRY", "Auditors manually re-type balances across multiple funds. A single typo triggers days of reconciliation delays.", C_AMBER),
-        ("03 • HIDDEN EXCEPTIONS", "Unallocated deposits and timing discrepancies stay buried in ledger rows until year-end fire drills.", C_SKY)
+        ("01 • NO PROVENANCE", "Disconnected Formulas\nFormulas like C4 + D5 = C6 have zero link to source PDFs.", C_ROSE),
+        ("02 • HIGH RISK", "Manual Data Entry\nRe-typing balances across funds causes delays and mistakes.", C_AMBER),
+        ("03 • HIDDEN ISSUES", "Buried Discrepancies\nUnallocated wires stay buried until year-end audits.", C_SKY)
     ]
     
     y_start = 1.9
@@ -103,15 +103,16 @@ def create_deck():
         
         p0 = tf.paragraphs[0]
         p0.text = head
-        p0.font.size = Pt(12)
+        p0.font.size = Pt(11)
         p0.font.bold = True
         p0.font.color.rgb = color
-        p0.space_after = Pt(4)
+        p0.space_after = Pt(3)
         
         p1 = tf.add_paragraph()
         p1.text = desc
         p1.font.size = Pt(11)
         p1.font.color.rgb = C_SLATE
+        p1.line_spacing = 1.15
 
     # Right: Quote & Stat Pills
     q_card = s1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(7.1), Inches(1.9), Inches(5.4), Inches(4.75))
@@ -133,17 +134,17 @@ def create_deck():
     qp0.space_after = Pt(14)
     
     qp1 = q_tf.add_paragraph()
-    qp1.text = '“Auditors spend up to 70% of quarterly reporting manually matching Excel numbers against PDF bank statements. It is slow, disconnected, and error-prone.”'
-    qp1.font.size = Pt(15)
+    qp1.text = '“Auditors spend 70% of their time manually cross-checking spreadsheets against PDFs.”'
+    qp1.font.size = Pt(16)
     qp1.font.italic = True
     qp1.font.color.rgb = C_WHITE
-    qp1.space_after = Pt(24)
+    qp1.space_after = Pt(28)
     
     # 3 Stats in PPT
     stats = [
-        ("70%", "MANUAL TIME"),
-        ("2-4 WKS", "NAV DELAY"),
-        ("100%", "PROOF REQUIRED")
+        ("70%", "MANUAL WORK"),
+        ("2-4 WKS", "AUDIT DELAY"),
+        ("100%", "PROOF NEEDED")
     ]
     for val, lbl in stats:
         p_stat = q_tf.add_paragraph()
@@ -160,12 +161,12 @@ def create_deck():
     set_slide_background(s2)
     add_header(s2, "Gemini 2.5 Multimodal AI | Product Solution",
                "The Solution: X-Ray Audit Copilot",
-               "Gemini-powered financial lineage & sub-millimeter character-grounded statement matching")
+               "Instant lineage, verified math, and click-to-source evidence")
     
     p_data = [
-        ("Engine 1 • Gemini 2.5 Multimodal Lineage", "Google Gemini multimodal understanding extracts statement metadata, accounts, and verbatim citation quotes into structured JSON.", C_SKY),
-        ("Engine 2 • Automated Math Verification", "Python AST engine recalculates vertical ledger sums (C4 + D5 = C6) and cross-fund balances with zero delta.", C_EMERALD),
-        ("Engine 3 • Grounded Statement Matching", "Extracts exact bounding boxes (bbox) from PDF statements for 100% verified, non-hallucinatory citations.", C_AMBER)
+        ("01 • Multimodal AI\nGemini 2.5 Extraction", "Reads statements into structured data with exact quote citations.\n\n• Verbatim quote citations\n• Multi-fund classification", C_SKY),
+        ("02 • Math Engine\nDeterministic Verification", "Python AST recalculates all formulas with zero hallucinations.\n\n• Zero math guessing\n• Real-time reconciliation", C_EMERALD),
+        ("03 • Source Evidence\nClick-to-Source PDF BBox", "PyMuPDF highlights exact character coordinates on source PDFs.\n\n• Sub-millimeter bounding boxes\n• Instant cell-to-PDF jump", C_AMBER)
     ]
     
     for i, (head, desc, color) in enumerate(p_data):
@@ -183,14 +184,14 @@ def create_deck():
         
         p0 = tf.paragraphs[0]
         p0.text = head
-        p0.font.size = Pt(14)
+        p0.font.size = Pt(13)
         p0.font.bold = True
         p0.font.color.rgb = color
         p0.space_after = Pt(12)
         
         p1 = tf.add_paragraph()
         p1.text = desc
-        p1.font.size = Pt(12)
+        p1.font.size = Pt(11)
         p1.font.color.rgb = C_SLATE
         p1.space_after = Pt(14)
 
@@ -199,9 +200,9 @@ def create_deck():
     # ==========================================
     s3 = prs.slides.add_slide(blank_layout)
     set_slide_background(s3)
-    add_header(s3, "System Design | Zero-Hallucination Pipeline",
+    add_header(s3, "System Pipeline | Zero-Hallucination",
                "High-Level System Architecture",
-               "Deterministic 4-stage pipeline connecting multi-fund sheets to source bank statements")
+               "4-stage pipeline connecting PDF statements to verified spreadsheets")
     
     if os.path.exists(arch_img):
         s3.shapes.add_picture(arch_img, Inches(0.8), Inches(1.85), width=Inches(7.8))
@@ -218,17 +219,17 @@ def create_deck():
     a_tf.margin_left = a_tf.margin_top = a_tf.margin_right = a_tf.margin_bottom = 0
     
     ap0 = a_tf.paragraphs[0]
-    ap0.text = "CORE GUARANTEES"
+    ap0.text = "CORE PIPELINE"
     ap0.font.size = Pt(11)
     ap0.font.bold = True
     ap0.font.color.rgb = C_SKY
     ap0.space_after = Pt(12)
     
     highlights = [
-        ("Gemini 2.5 Flash & Pro", "Flash for rapid PDF classification; Pro for multimodal financial extraction."),
-        ("Sub-Millimeter BBox", "Direct character coordinate extraction via PyMuPDF and pdfplumber."),
-        ("Deterministic AST Math", "Python AST formula evaluation; zero LLM math guessing or hallucination."),
-        ("Suspense Alerting", "Detects unallocated deposits (e.g. €45,200) with review badges.")
+        ("Gemini 2.5 Flash & Pro", "Fast PDF classification & deep financial extraction."),
+        ("PDF Bounding Boxes", "Exact visual coordinates on source documents."),
+        ("Deterministic Math", "Python AST evaluates formulas with zero error."),
+        ("Exception Quarantine", "Auto-flags unallocated items for review.")
     ]
     
     for title, detail in highlights:
@@ -249,15 +250,15 @@ def create_deck():
     # ==========================================
     s4 = prs.slides.add_slide(blank_layout)
     set_slide_background(s4)
-    add_header(s4, "Engineering & Delivery | Production Ready",
-               "Technology Stack & Turnkey Delivery",
-               "Modern, decoupled architecture with single-command Docker deployment")
+    add_header(s4, "Tech Stack | Ready to Run",
+               "Technology & Deployment",
+               "Modern, decoupled architecture built for production")
     
     tech_cards = [
-        ("GOOGLE GEMINI 2.5 (FLASH & PRO)", "Official google-genai SDK. Flash for fast PDF classification; Pro for structured financial entity & quote extraction.", C_SKY),
-        ("FASTAPI & PYTHON 3.11", "Asynchronous REST API, formula AST dependency solver, PyMuPDF coordinate geometry, sub-50ms latency.", C_EMERALD),
-        ("NEXT.JS 14 & FORTUNESHEET", "React 18 App Router, Tailwind CSS, virtualized spreadsheet canvas, and synchronized PDF.js split-viewer.", C_SKY),
-        ("TURNKEY DOCKER", "Single-command containerization (./run_docker.sh) running full stack with optional GEMINI_API_KEY or offline heuristic fallback.", C_AMBER)
+        ("GOOGLE GEMINI 2.5", "Gemini Flash & Pro for fast classification and structured extraction.", C_SKY),
+        ("FASTAPI & PYTHON 3.11", "Async API and formula AST solver with sub-50ms execution.", C_EMERALD),
+        ("NEXT.JS 14 & FORTUNESHEET", "Canvas spreadsheet synced with interactive PDF.js viewer.", C_SKY),
+        ("DOCKER & COMPOSE", "Single-command launch via ./run_docker.sh.", C_AMBER)
     ]
     
     grid_coords = [
