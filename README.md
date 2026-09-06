@@ -7,19 +7,30 @@
 
 ## ⚡ Quick Start (One Command to Run)
 
-Clone the repository and run the startup script:
+Clone the repository:
 
 ```bash
 git clone https://github.com/prkshverma09/audit-copilot.git
 cd audit-copilot
+```
+
+### Option A: Turnkey Docker Deployment (Recommended for Judges 🐳)
+Run everything in isolated containers with zero dependency setup:
+
+```bash
+./run_docker.sh
+# or
+docker compose up --build
+```
+
+### Option B: Local Native Deployment (Without Docker)
+```bash
 ./start_all.sh
 ```
 
 - **Frontend Application:** [http://localhost:3000](http://localhost:3000)
 - **Backend FastAPI API:** [http://localhost:8000](http://localhost:8000)
 - **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
-
-*Requires Python 3.9+ and Node.js 18+.*
 
 ---
 

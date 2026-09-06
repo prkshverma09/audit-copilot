@@ -51,10 +51,12 @@ async def lifespan(app: FastAPI):
     # Immediately populate default job from verified baseline fixture so server starts instantly
     import json
     fixture_paths = [
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "fixtures", "mock_lineage.json")),
         os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "src", "fixtures", "mock_lineage.json")),
         os.path.abspath("frontend/src/fixtures/mock_lineage.json"),
     ]
     fortune_paths = [
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "fixtures", "mock_fortune_data.json")),
         os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "src", "fixtures", "mock_fortune_data.json")),
         os.path.abspath("frontend/src/fixtures/mock_fortune_data.json"),
     ]

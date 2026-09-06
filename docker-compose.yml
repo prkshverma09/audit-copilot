@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: audit_copilot_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    volumes:
+      - ./Ylookup Hackathon Datasets:/app/Ylookup Hackathon Datasets:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: audit_copilot_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_INTERNAL_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
