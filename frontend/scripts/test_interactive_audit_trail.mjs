@@ -158,7 +158,7 @@ async function run() {
   await page.screenshot({ path: path.join(ARTIFACT_DIR, 'diu_leg1_audit_trail_verified.png') });
 
   // Step 6: Return to primary sheet and select C4
-  console.log('Switching back to primary "Fund Cash & Tie-Out" tab...');
+  console.log('Switching back to primary "Fund Cash Reconciliation" tab...');
   await clickTabByName(page, 'Fund Cash');
   await sleep(1500);
 

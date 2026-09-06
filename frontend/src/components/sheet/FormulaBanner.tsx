@@ -93,7 +93,7 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
       {/* Right: Bridge Status */}
       <div className="flex items-center space-x-2 shrink-0">
 
-        {/* Footing & Tie-Out Bridge Button */}
+        {/* Reconciliation Inspection Button */}
         {hasTieOutDecoration ? (
           <button
             onClick={onOpenTieOutBridge}
@@ -102,7 +102,7 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
                 ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40 ring-1 ring-emerald-500/20'
                 : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40 ring-1 ring-amber-500/20'
             }`}
-            title="Click to inspect the Arithmetic Bridge equation for this cell"
+            title="Click to inspect reconciliation: Math verified (sum) • Matched to statement PDF"
           >
             {tieOutReport!.cell_decorations[selectedCellId].status === 'footed_and_tied' ? (
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -110,7 +110,7 @@ export const FormulaBanner: React.FC<FormulaBannerProps> = ({
               <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
             )}
             <span>{tieOutReport!.cell_decorations[selectedCellId].badge_label}</span>
-            <span className="text-[10px] text-sky-300 underline ml-0.5 font-bold">Inspect Bridge</span>
+            <span className="text-[10px] text-sky-300 underline ml-0.5 font-bold">Inspect Reconciliation</span>
           </button>
         ) : isVerified ? (
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">

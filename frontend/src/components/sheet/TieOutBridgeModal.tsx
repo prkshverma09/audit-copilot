@@ -79,11 +79,11 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="text-base font-bold text-white tracking-tight">
-                  Automated Tie-Out & Footing Engine
+                  Automated Reconciliation Engine
                 </h2>
               </div>
               <p className="text-xs text-slate-400">
-                Grounded mathematical verification, vertical footing, and cross-statement bridges
+                Mathematical sum verification (footing) & bank statement matching (tie-outs)
               </p>
             </div>
           </div>
@@ -129,7 +129,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
 
           <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
             <span className="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
-              Footing Accuracy
+              Reconciliation Accuracy
             </span>
             <div
               className={`text-base font-bold font-mono mt-0.5 ${
@@ -161,7 +161,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
               {report.total_unexplained_delta === 0 ? (
                 <>
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-400">100% Tied</span>
+                  <span className="text-emerald-400">100% Reconciled</span>
                 </>
               ) : (
                 <>
@@ -178,7 +178,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
           {/* Bridge Selector Column */}
           <div className="p-4 overflow-y-auto space-y-2 bg-slate-950/40">
             <span className="text-[11px] font-bold uppercase text-slate-500 tracking-wider block px-1 mb-2">
-              Verification Bridges ({report.bridges.length})
+              Reconciliation Checks ({report.bridges.length})
             </span>
 
             {report.bridges.map((bridge) => {
@@ -359,7 +359,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
                       activeBridge.delta === 0 ? 'text-emerald-400' : 'text-rose-400'
                     }`}
                   >
-                    {activeBridge.delta === 0 ? '€0.00 (Tied)' : formatCurrency(activeBridge.delta)}
+                    {activeBridge.delta === 0 ? '€0.00 (Reconciled)' : formatCurrency(activeBridge.delta)}
                   </span>
                 </div>
               </div>
@@ -375,7 +375,7 @@ export const TieOutBridgeModal: React.FC<TieOutBridgeModalProps> = ({
 
             {/* Modal Footer actions */}
             <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <span>Zero-Variance Tie-Out Standard</span>
+              <span>Zero-Variance Reconciliation Standard</span>
               <button
                 onClick={onClose}
                 className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors"

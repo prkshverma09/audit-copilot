@@ -140,8 +140,8 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
             {"r": 6, "c": 1, "v": {"v": "Portfolio EUR Aggregate", "m": "Portfolio EUR Aggregate", "fc": "#94A3B8", "bg": "#1E293B"}},
             {"r": 6, "c": 2, "v": {"v": c7_val, "m": f"€{c7_val:,.2f}", "f": "=C4+C5+C6", "ct": {"fa": "€#,##0.00", "t": "n"}, "bl": 1, "fc": "#38BDF8", "bg": "#0C4A6E"}},
             {"r": 6, "c": 3, "v": {"v": "EUR", "m": "EUR", "bg": "#1E293B", "fc": "#94A3B8"}},
-            {"r": 6, "c": 4, "v": {"v": "TIED & VERIFIED", "m": "TIED & VERIFIED", "fc": "#10B981", "bl": 1, "bg": "#1E293B"}},
-            {"r": 6, "c": 5, "v": {"v": "Footing: C4 + C5 + C6", "m": "Footing: C4 + C5 + C6", "fc": "#38BDF8", "bg": "#1E293B"}},
+            {"r": 6, "c": 4, "v": {"v": "RECONCILED", "m": "RECONCILED", "fc": "#10B981", "bl": 1, "bg": "#1E293B"}},
+            {"r": 6, "c": 5, "v": {"v": "Reconciliation: C4 + C5 + C6", "m": "Reconciliation: C4 + C5 + C6", "fc": "#38BDF8", "bg": "#1E293B"}},
             # Row 7: Section Header
             {"r": 7, "c": 0, "v": {"v": "FOREIGN CURRENCY PORTFOLIO BALANCES", "m": "FOREIGN CURRENCY PORTFOLIO BALANCES", "bl": 1, "fc": "#E2E8F0", "bg": "#1E293B"}},
             # Row 8 (C9) USD
@@ -225,7 +225,7 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
         c14_val = c14.calculated_value if c14 else 45200.00
 
         celldata = [
-            {"r": 0, "c": 0, "v": {"v": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH TIE-OUT MATRIX", "m": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH TIE-OUT MATRIX", "bl": 1, "fs": 13, "fc": "#38BDF8", "bg": "#0F172A"}},
+            {"r": 0, "c": 0, "v": {"v": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH RECONCILIATION MATRIX", "m": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH RECONCILIATION MATRIX", "bl": 1, "fs": 13, "fc": "#38BDF8", "bg": "#0F172A"}},
             {"r": 2, "c": 0, "v": {"v": "Line Item / Entity", "m": "Line Item / Entity", "bl": 1, "bg": "#1E293B", "fc": "#94A3B8"}},
             {"r": 2, "c": 1, "v": {"v": "Account Reference", "m": "Account Reference", "bl": 1, "bg": "#1E293B", "fc": "#94A3B8"}},
             {"r": 2, "c": 2, "v": {"v": "Fund I (EUR)", "m": "Fund I (EUR)", "bl": 1, "bg": "#1E293B", "fc": "#94A3B8"}},
@@ -251,30 +251,30 @@ async def sheet_map_node(state: GraphState) -> Dict[str, Any]:
             {"r": 5, "c": 1, "v": {"v": "Aggregate Portfolio Cash", "m": "Aggregate Portfolio Cash", "fc": "#94A3B8", "bg": "#1E293B"}},
             {"r": 5, "c": 2, "v": {"v": c6_val, "m": f"€{c6_val:,.2f}", "f": "=C4+D5", "ct": {"fa": "€#,##0.00", "t": "n"}, "bl": 1, "fc": "#38BDF8", "bg": "#0C4A6E"}},
             {"r": 5, "c": 3, "v": {"v": "-", "m": "-", "bg": "#1E293B", "fc": "#64748B"}},
-            {"r": 5, "c": 4, "v": {"v": "TIED & VERIFIED", "m": "TIED & VERIFIED", "fc": "#10B981", "bl": 1, "bg": "#1E293B"}},
-            {"r": 5, "c": 5, "v": {"v": "Footing: C4 + D5", "m": "Footing: C4 + D5", "fc": "#38BDF8", "bg": "#1E293B"}},
+            {"r": 5, "c": 4, "v": {"v": "RECONCILED", "m": "RECONCILED", "fc": "#10B981", "bl": 1, "bg": "#1E293B"}},
+            {"r": 5, "c": 5, "v": {"v": "Reconciliation: C4 + D5", "m": "Reconciliation: C4 + D5", "fc": "#38BDF8", "bg": "#1E293B"}},
             # Row 7 & 8 (C9, D9)
             {"r": 7, "c": 0, "v": {"v": "INTERCOMPANY SHARE ACQUISITION RECONCILIATION (CEPHALUS)", "m": "INTERCOMPANY SHARE ACQUISITION RECONCILIATION (CEPHALUS)", "bl": 1, "fc": "#E2E8F0", "bg": "#1E293B"}},
             {"r": 8, "c": 0, "v": {"v": "Share Trf 1: Cephalus Co-Invest", "m": "Share Trf 1: Cephalus Co-Invest", "fc": "#F8FAFC"}},
             {"r": 8, "c": 1, "v": {"v": "55051QC31ZHZ", "m": "55051QC31ZHZ", "fc": "#94A3B8"}},
             {"r": 8, "c": 2, "v": {"v": c9_val, "m": f"€{c9_val:,.2f}", "ct": {"fa": "€#,##0.00", "t": "n"}, "fc": "#10B981", "bg": "#064E3B", "bl": 1}},
             {"r": 8, "c": 3, "v": {"v": d9_val, "m": f"€{d9_val:,.2f}", "ct": {"fa": "€#,##0.00", "t": "n"}, "fc": "#10B981", "bg": "#064E3B", "bl": 1}},
-            {"r": 8, "c": 4, "v": {"v": "TIED (Δ €0.00)", "m": "TIED (Δ €0.00)", "fc": "#10B981", "bl": 1}},
+            {"r": 8, "c": 4, "v": {"v": "RECONCILED (Δ €0.00)", "m": "RECONCILED (Δ €0.00)", "fc": "#10B981", "bl": 1}},
             {"r": 8, "c": 5, "v": {"v": "Calder EUR 0894 / 8102 (p. 2)", "m": "Calder EUR 0894 / 8102 (p. 2)", "fc": "#38BDF8"}},
             # Row 9 (C10, D10)
             {"r": 9, "c": 0, "v": {"v": "Share Trf 2: Cephalus QFPF", "m": "Share Trf 2: Cephalus QFPF", "fc": "#F8FAFC"}},
             {"r": 9, "c": 1, "v": {"v": "85202DA174BN", "m": "85202DA174BN", "fc": "#94A3B8"}},
             {"r": 9, "c": 2, "v": {"v": c10_val, "m": f"€{c10_val:,.2f}", "ct": {"fa": "€#,##0.00", "t": "n"}, "fc": "#10B981", "bg": "#064E3B", "bl": 1}},
             {"r": 9, "c": 3, "v": {"v": d10_val, "m": f"€{d10_val:,.2f}", "ct": {"fa": "€#,##0.00", "t": "n"}, "fc": "#10B981", "bg": "#064E3B", "bl": 1}},
-            {"r": 9, "c": 4, "v": {"v": "TIED (Δ €0.00)", "m": "TIED (Δ €0.00)", "fc": "#10B981", "bl": 1}},
+            {"r": 9, "c": 4, "v": {"v": "RECONCILED (Δ €0.00)", "m": "RECONCILED (Δ €0.00)", "fc": "#10B981", "bl": 1}},
             {"r": 9, "c": 5, "v": {"v": "Calder EUR 0894 / 8102 (p. 2)", "m": "Calder EUR 0894 / 8102 (p. 2)", "fc": "#38BDF8"}},
             # Row 10 (C11, D11, E11)
             {"r": 10, "c": 0, "v": {"v": "Total Intercompany Acquisitions", "m": "Total Intercompany Acquisitions", "bl": 1, "fc": "#F8FAFC", "bg": "#1E293B"}},
             {"r": 10, "c": 1, "v": {"v": "Net Position", "m": "Net Position", "fc": "#94A3B8", "bg": "#1E293B"}},
             {"r": 10, "c": 2, "v": {"v": c11_val, "m": f"€{c11_val:,.2f}", "f": "=C9+C10", "ct": {"fa": "€#,##0.00", "t": "n"}, "bl": 1, "fc": "#38BDF8", "bg": "#0C4A6E"}},
             {"r": 10, "c": 3, "v": {"v": -c11_val, "m": f"-€{c11_val:,.2f}", "f": "=D9+D10", "ct": {"fa": "€#,##0.00", "t": "n"}, "bl": 1, "fc": "#38BDF8", "bg": "#0C4A6E"}},
-            {"r": 10, "c": 4, "v": {"v": e11_val, "m": "PERFECT TIE (Δ €0.00)", "fc": "#10B981", "bl": 1, "bg": "#1E293B"}},
-            {"r": 10, "c": 5, "v": {"v": "Cross-Fund Tie-Out", "m": "Cross-Fund Tie-Out", "fc": "#38BDF8", "bg": "#1E293B"}},
+            {"r": 10, "c": 4, "v": {"v": e11_val, "m": "FULLY RECONCILED (Δ €0.00)", "fc": "#10B981", "bl": 1, "bg": "#1E293B"}},
+            {"r": 10, "c": 5, "v": {"v": "Cross-Fund Reconciliation", "m": "Cross-Fund Reconciliation", "fc": "#38BDF8", "bg": "#1E293B"}},
             # Row 13 (C14)
             {"r": 13, "c": 0, "v": {"v": "Unallocated Settlement Reserve", "m": "Unallocated Settlement Reserve", "fc": "#F8FAFC"}},
             {"r": 13, "c": 1, "v": {"v": "SUSPENSE-Q1", "m": "SUSPENSE-Q1", "fc": "#94A3B8"}},

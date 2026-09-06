@@ -49,7 +49,7 @@ export function usePipeline(customCells?: Record<string, CellLineage>) {
   const triggerAuditRun = useCallback(
     async (docIds?: string[], onComplete?: (jobId: string) => Promise<void> | void) => {
       setIsAuditing(true);
-      setAuditMessage('Analyzing statement lineage and tie-outs...');
+      setAuditMessage('Analyzing statement lineage and reconciling balances...');
 
       try {
         const runRes = await api.triggerPipeline(docIds || []);

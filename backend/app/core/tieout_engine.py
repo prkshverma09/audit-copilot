@@ -114,8 +114,8 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
         else:
             c7_delta = round(c7_computed - c7_reported, 2)
             c7_status = "footed_and_tied" if abs(c7_delta) < 0.01 else "discrepancy"
-            c7_label = "✓ Footed & Tied" if abs(c7_delta) < 0.01 else f"⚠️ Discrepancy: Δ €{c7_delta:,.2f}"
-            c7_notes = f"Fund I Cash (€{c4_val:,.2f}) + Fund II Cash (€{c5_val:,.2f}) + Fund V Cash (€{c6_val:,.2f}) perfectly foots to Consolidated EUR Ledger (€{c7_reported:,.2f})."
+            c7_label = "✓ Fully Reconciled" if abs(c7_delta) < 0.01 else f"⚠️ Discrepancy: Δ €{c7_delta:,.2f}"
+            c7_notes = f"Fund I Cash (€{c4_val:,.2f}) + Fund II Cash (€{c5_val:,.2f}) + Fund V Cash (€{c6_val:,.2f}) perfectly reconciles to Consolidated EUR Ledger (€{c7_reported:,.2f})."
 
         bridge_1 = TieOutBridge(
             bridge_id="bridge_fund_consolidation",
@@ -167,8 +167,8 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
         else:
             c6_delta = round(c6_computed - c6_reported, 2)
             c6_status = "footed_and_tied" if abs(c6_delta) < 0.01 else "discrepancy"
-            c6_label = "✓ Footed & Tied" if abs(c6_delta) < 0.01 else f"⚠️ Discrepancy: Δ €{c6_delta:,.2f}"
-            c6_notes = "Fund I Cash (€13,243,300.91) + Fund II Cash (€20,000.00) perfectly foots to Consolidated Ledger (€13,263,300.91)."
+            c6_label = "✓ Fully Reconciled" if abs(c6_delta) < 0.01 else f"⚠️ Discrepancy: Δ €{c6_delta:,.2f}"
+            c6_notes = "Fund I Cash (€13,243,300.91) + Fund II Cash (€20,000.00) perfectly reconciles to Consolidated Ledger (€13,263,300.91)."
 
         bridge_1 = TieOutBridge(
             bridge_id="bridge_fund_consolidation",
@@ -203,7 +203,7 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
         )
 
     # -------------------------------------------------------------
-    # Bridge 2: Intercompany Net Clearing Tie-Out (C11 + D9 + D10 = E11 == 0.00)
+    # Bridge 2: Intercompany Net Clearing Reconciliation (C11 + D9 + D10 = E11 == 0.00)
     # -------------------------------------------------------------
     e11_computed = round(c11_val + d9_val + d10_val, 2)
     e11_delta = round(e11_computed - e11_reported, 2)
@@ -213,15 +213,15 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
 
     bridge_2 = TieOutBridge(
         bridge_id="bridge_intercompany_tieout",
-        name="Intercompany Clearing & Settlement Tie-Out",
+        name="Intercompany Clearing & Settlement Reconciliation",
         target_cell="E11",
         bridge_type="intercompany_tieout",
-        formula_display="C11 + D9 + D10 = E11 (Net Tie-Out == 0.00)",
+        formula_display="C11 + D9 + D10 = E11 (Net Reconciliation == 0.00)",
         expected_value=e11_computed,
         reported_value=e11_reported,
         delta=e11_delta,
         status=e11_status,
-        status_label="✓ Footed & Tied" if e11_status == "footed_and_tied" else f"⚠️ Discrepancy: Δ €{e11_delta:,.2f}",
+        status_label="✓ Fully Reconciled" if e11_status == "footed_and_tied" else f"⚠️ Discrepancy: Δ €{e11_delta:,.2f}",
         inputs=[
             TieOutInput(
                 cell_id="C11",
@@ -248,11 +248,11 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
                 verbatim_quote="0.77",
             ),
         ],
-        notes="Zero-balance cross-fund tie-out verified: Fund I allocation (-€1.62) completely cleared by Fund II tranches (€0.85 + €0.77).",
+        notes="Zero-balance cross-fund reconciliation verified: Fund I allocation (-€1.62) completely cleared by Fund II tranches (€0.85 + €0.77).",
     )
 
     # -------------------------------------------------------------
-    # Bridge 3: Fund I Vertical Cash Balance Footing
+    # Bridge 3: Fund I Vertical Cash Balance Reconciliation
     # -------------------------------------------------------------
     fund1_beginning = 0.00
     fund1_net_inflows = c4_val
@@ -261,7 +261,7 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
 
     bridge_3 = TieOutBridge(
         bridge_id="bridge_vertical_fund_1",
-        name="Fund I Vertical Cash Footing",
+        name="Fund I Vertical Cash Balance Reconciliation",
         target_cell="C4",
         bridge_type="vertical_footing",
         formula_display="Beginning Balance + Receipts - Disbursements = Ending Balance",
@@ -269,7 +269,7 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
         reported_value=c4_val,
         delta=fund1_delta,
         status="footed_and_tied",
-        status_label="✓ Footed & Tied",
+        status_label="✓ Fully Reconciled",
         inputs=[
             TieOutInput(
                 cell_id="A4",
@@ -288,7 +288,7 @@ def evaluate_tieouts(lineage: SheetLineageResponse, simulate_discrepancy: bool =
                 verbatim_quote="Total Receipts: 13,243,300.91",
             ),
         ],
-        notes="Vertical footing verified: Opening balance (€0.00) plus verified receipts equals ending cash balance (€13,243,300.91).",
+        notes="Vertical balance reconciliation verified: Opening balance (€0.00) plus verified receipts equals ending cash balance (€13,243,300.91).",
     )
 
     # -------------------------------------------------------------

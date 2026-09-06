@@ -1,6 +1,6 @@
 {
   "sheet_id": "sheet_fund_reconciliation_2026_q1",
-  "sheet_name": "Fund Cash & Intercompany Tie-Out",
+  "sheet_name": "Fund Cash Reconciliation",
   "documents": [
     {
       "doc_id": "doc_0894",
@@ -238,7 +238,7 @@
     },
     "E11": {
       "cell_id": "E11",
-      "metric_name": "Intercompany Net Tie-Out Delta",
+      "metric_name": "Intercompany Net Reconciliation Delta",
       "calculated_value": 0.0,
       "formula_display": "C11 + D9 + D10 == 0.00 (Balanced)",
       "status": "verified",

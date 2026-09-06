@@ -349,9 +349,9 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
                     <div className="w-4 h-4 rounded-full border border-slate-600 shrink-0" />
                   )}
                   <div className="flex flex-col">
-                    <span className="font-semibold">Audit Grid & Footing Tie-Out Assembly</span>
+                    <span className="font-semibold">Audit Grid & Reconciliation Engine</span>
                     <span className="text-[11px] text-slate-400">
-                      Formats financial cells, computes tie-out footings, and links evidence citations
+                      Formats financial cells, computes automated reconciliation, and links evidence citations
                     </span>
                   </div>
                 </div>

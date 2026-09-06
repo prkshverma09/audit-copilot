@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
-        {/* Footing & Tie-Out Engine Button */}
+        {/* Automated Reconciliation Engine Button */}
         {onOpenTieOutModal && tieOutReport && (
           <button
             onClick={onOpenTieOutModal}
@@ -98,11 +98,11 @@ export const Header: React.FC<HeaderProps> = ({
                 ? 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-300'
                 : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-300'
             }`}
-            title="Inspect Automated Tie-Out & Footing Bridges"
+            title="Inspect Automated Reconciliation Engine (Math verified & Statement matched)"
           >
             <Calculator className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span>
-              Tie-Outs: {tieOutReport?.passed_bridges ?? 3}/{tieOutReport?.total_bridges ?? 4} Tied
+              Reconciled: {tieOutReport?.passed_bridges ?? 3}/{tieOutReport?.total_bridges ?? 4}
             </span>
           </button>
         )}

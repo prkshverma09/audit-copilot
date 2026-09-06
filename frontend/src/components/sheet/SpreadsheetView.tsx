@@ -200,7 +200,7 @@ export const SpreadsheetView: React.FC<SpreadsheetViewProps> = ({
         if (cellTieOut) {
           ctx.save();
           if (cellTieOut.status === 'footed_and_tied') {
-            // Draw Green Shield Icon for Footed & Tied Cell
+            // Draw Green Shield Icon for Fully Reconciled Cell
             const x = cellInfo.endX - 12;
             const y = cellInfo.startY + 3;
             ctx.fillStyle = '#10B981';

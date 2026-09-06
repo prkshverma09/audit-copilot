@@ -201,7 +201,7 @@ export default function AuditCopilotPage() {
                         X-Ray Audit Copilot
                       </h2>
                       <p className="text-xs text-slate-400 leading-relaxed">
-                        Autonomous financial data lineage, mathematical footing tie-outs, and character-grounded PDF statement verification.
+                        Autonomous financial data lineage, multi-fund balance reconciliation, and character-grounded PDF statement verification.
                       </p>
                     </div>
 
@@ -239,7 +239,7 @@ export default function AuditCopilotPage() {
                               Upload Statements & Run Audit
                             </div>
                             <div className="text-[11px] text-slate-400">
-                              Extract lineage & verify tie-outs from PDF statements
+                              Extract lineage & reconcile balances from PDF statements
                             </div>
                           </div>
                         </div>

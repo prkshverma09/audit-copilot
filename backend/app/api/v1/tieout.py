@@ -35,7 +35,7 @@ def _get_lineage(job_id: str) -> SheetLineageResponse:
     # Return empty response if no jobs found
     return SheetLineageResponse(
         sheet_id="sheet_default",
-        sheet_name="Fund Cash & Tie-Out Reconciliation",
+        sheet_name="Fund Cash Reconciliation",
         documents=[],
         cells={},
         fortune_sheet_data=[],

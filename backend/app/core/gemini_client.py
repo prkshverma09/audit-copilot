@@ -125,7 +125,7 @@ class GeminiService:
                 "- C10: Intercompany Inflow Cephalus QFPF (TRN 85202DA174BN, credit 1.62)\n"
                 "- D10: Intercompany Outflow Cephalus QFPF (TRN 85202DA174BN, debit -1.62)\n"
                 "- C11: Total Intercompany Acquisitions (= C9 + C10)\n"
-                "- E11: Intercompany Net Tie-Out Delta (= C11 + D9 + D10 == 0.00 Balanced)\n"
+                "- E11: Intercompany Net Reconciliation Delta (= C11 + D9 + D10 == 0.00 Balanced)\n"
                 "- C14: Unallocated Settlement Reserve (SUSPENSE-Q1, note if unmatched/unsubstantiated in PDF)\n\n"
                 "For each cell, provide:\n"
                 "- cell_id (e.g. 'C4', 'D5', 'C6', 'E11', 'C14')\n"
@@ -137,7 +137,7 @@ class GeminiService:
                 "- inputs: array of {input_cell, source_document, doc_id, page_number, extracted_value, verbatim_quote}\n\n"
                 "Output strictly valid JSON matching this structure:\n"
                 "{\n"
-                '  "sheet_title": "Fund Cash & Intercompany Tie-Out",\n'
+                '  "sheet_title": "Fund Cash Reconciliation",\n'
                 '  "cells": {\n'
                 '    "C4": { ... },\n'
                 '    "D5": { ... },\n'
@@ -659,7 +659,7 @@ class GeminiService:
 
             cells["E11"] = {
                 "cell_id": "E11",
-                "metric_name": "Intercompany Net Tie-Out Delta",
+                "metric_name": "Intercompany Net Reconciliation Delta",
                 "calculated_value": 0.00,
                 "formula_display": "C11 + D9 + D10 == 0.00 (Balanced)",
                 "status": "verified",
@@ -731,7 +731,7 @@ class GeminiService:
             row_offset += 1
 
         return {
-            "sheet_title": "Fund Cash & Intercompany Tie-Out",
+            "sheet_title": "Fund Cash Reconciliation",
             "cells": cells
         }
 

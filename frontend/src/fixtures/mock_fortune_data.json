@@ -1,6 +1,6 @@
 [
   {
-    "name": "Fund Cash & Tie-Out",
+    "name": "Fund Cash Reconciliation",
     "id": "sheet_fund_reconciliation_2026_q1",
     "order": 0,
     "status": 1,
@@ -11,8 +11,8 @@
         "r": 0,
         "c": 0,
         "v": {
-          "v": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH TIE-OUT MATRIX",
-          "m": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH TIE-OUT MATRIX",
+          "v": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH RECONCILIATION MATRIX",
+          "m": "X-RAY AUDIT COPILOT - MULTI-FUND LINEAGE & CASH RECONCILIATION MATRIX",
           "bl": 1,
           "fs": 13,
           "fc": "#38BDF8",
@@ -258,8 +258,8 @@
         "r": 5,
         "c": 4,
         "v": {
-          "v": "TIED & VERIFIED",
-          "m": "TIED & VERIFIED",
+          "v": "RECONCILED",
+          "m": "RECONCILED",
           "fc": "#10B981",
           "bl": 1,
           "bg": "#1E293B"
@@ -269,8 +269,8 @@
         "r": 5,
         "c": 5,
         "v": {
-          "v": "Footing: C4 + D5",
-          "m": "Footing: C4 + D5",
+          "v": "Reconciliation: C4 + D5",
+          "m": "Reconciliation: C4 + D5",
           "fc": "#38BDF8",
           "bg": "#1E293B"
         }
@@ -338,8 +338,8 @@
         "r": 8,
         "c": 4,
         "v": {
-          "v": "TIED (\u0394 \u20ac0.00)",
-          "m": "TIED (\u0394 \u20ac0.00)",
+          "v": "RECONCILED (\u0394 \u20ac0.00)",
+          "m": "RECONCILED (\u0394 \u20ac0.00)",
           "fc": "#10B981",
           "bl": 1
         }
@@ -405,8 +405,8 @@
         "r": 9,
         "c": 4,
         "v": {
-          "v": "TIED (\u0394 \u20ac0.00)",
-          "m": "TIED (\u0394 \u20ac0.00)",
+          "v": "RECONCILED (\u0394 \u20ac0.00)",
+          "m": "RECONCILED (\u0394 \u20ac0.00)",
           "fc": "#10B981",
           "bl": 1
         }
@@ -477,8 +477,8 @@
         "r": 10,
         "c": 4,
         "v": {
-          "v": "PERFECT TIE (\u0394 \u20ac0.00)",
-          "m": "PERFECT TIE (\u0394 \u20ac0.00)",
+          "v": 0,
+          "m": "FULLY RECONCILED (\u0394 \u20ac0.00)",
           "fc": "#10B981",
           "bl": 1,
           "bg": "#1E293B"
@@ -488,8 +488,8 @@
         "r": 10,
         "c": 5,
         "v": {
-          "v": "Cross-Fund Tie-Out",
-          "m": "Cross-Fund Tie-Out",
+          "v": "Cross-Fund Reconciliation",
+          "m": "Cross-Fund Reconciliation",
           "fc": "#38BDF8",
           "bg": "#1E293B"
         }

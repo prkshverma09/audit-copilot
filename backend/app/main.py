@@ -71,7 +71,7 @@ async def lifespan(app: FastAPI):
                 job_id="default",
                 status="completed",
                 progress=1.0,
-                message="Initial Fund Cash & Tie-Out Reconciliation ready.",
+                message="Initial Fund Cash Reconciliation ready.",
                 result=SheetLineageResponse(**fixture_data)
             )
             logger.info("Default reconciliation matrix & sheet data loaded instantly from verified baseline.")
